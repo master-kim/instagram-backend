@@ -22,8 +22,4 @@ public class InstagramBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(InstagramBackendApplication.class, args);
     }
-    
-    
-    
-
 }
