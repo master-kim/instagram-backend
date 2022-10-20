@@ -30,17 +30,13 @@ public class StoryController {
     // 2022.10.14.김요한.추가 - 메인 페이지 스토리 리스트 영역
     //@GetMapping("/storyList")
     @PostMapping("/storyList")
-    public List<StoryEntity> storyList(HttpSession session , HttpServletRequest request) throws Exception{
+    public List<StoryEntity> storyList(HttpServletRequest request) throws Exception{
         
-        // 추후 session 통해 로그인 id 확인
-        // String sessionUserId = session.getAttribute("user_id").toString();
-        String sessionUserId = "kimyohan";
+        String sessionUserId = request.getSession().getAttribute("user_id").toString();
        
         List<StoryEntity> storyList = storyserviceimpl.findByUserIdIn(sessionUserId);
         
         return storyList;
-        // HttpStatus 값을 넣어줄 필요가 없음 (성공 시 200으로 매핑되어 들어가며 , 실패시 그에 맞는 코드 전송)
-        //return new ResponseEntity<List<StoryEntity>>(storyList , HttpStatus.OK);
     }
     
 }

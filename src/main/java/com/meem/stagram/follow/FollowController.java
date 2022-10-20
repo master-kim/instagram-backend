@@ -33,11 +33,10 @@ public class FollowController {
     // 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
     //@GetMapping("/postList")
     @PostMapping("/followList")
-    public List<FollowEntity> followList(HttpSession session , HttpServletRequest request) throws Exception{
+    public List<FollowEntity> followList(HttpServletRequest request) throws Exception{
         
         // 추후 session 통해 로그인 id 확인
-        // String sessionUserId = session.getAttribute("user_id").toString();
-        String sessionUserId = "kimyohan";
+        String sessionUserId = request.getSession().getAttribute("user_id").toString();
        
         List<FollowEntity> followList = followserviceimpl.followList(sessionUserId);
         

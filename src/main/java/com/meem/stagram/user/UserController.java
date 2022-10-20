@@ -32,15 +32,14 @@ public class UserController {
     // 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
     //@GetMapping("/userLogin")
     @PostMapping("/userLogin")
-    public HashMap<String, Object> userLogin(HttpSession session , HttpServletRequest request 
-                             , @RequestBody Map<String, Object> param
-                           ) throws Exception{
-        
-        String userId = param.get("userid").toString();
+    public HashMap<String, Object> userLogin(HttpServletRequest request , @RequestBody Map<String, Object> param ) throws Exception{
         
         // 세션에 유저 아이디 저장
+        HttpSession session = request.getSession();
+        String userId = param.get("userid").toString();
         session.setAttribute("user_id", userId);
         
+        // 해당 유저 데이터가 맞는지 확인
         HashMap<String, Object> result = userserviceimpl.findByUserId(param);
         
         return result;

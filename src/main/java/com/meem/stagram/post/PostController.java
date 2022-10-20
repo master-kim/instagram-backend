@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 작업일          작업자    작업내용
  * ------------------------------------------------------------- 
  * 2022.10.01    김요한    최초작성 
- * 2022.10.17    김요한    스토리 게시판 가져오는 컨트롤러 생성
+ * 2022.10.17    김요한    게시판 가져오는 컨트롤러 생성
  * -------------------------------------------------------------
  */
 
@@ -33,11 +33,9 @@ public class PostController {
     // 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
     //@GetMapping("/postList")
     @PostMapping("/postList")
-    public List<PostEntity> postList(HttpSession session , HttpServletRequest request) throws Exception{
+    public List<PostEntity> postList(HttpServletRequest request) throws Exception{
         
-        // 추후 session 통해 로그인 id 확인
-        // String sessionUserId = session.getAttribute("user_id").toString();
-        String sessionUserId = "kimyohan";
+        String sessionUserId = request.getSession().getAttribute("user_id").toString();
        
         List<PostEntity> postList = postserviceimpl.postList(sessionUserId);
         
