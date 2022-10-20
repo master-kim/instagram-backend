@@ -47,6 +47,7 @@ public class UserServiceImpl {
         
         // 암호화 방식 : sha256 단방향 암호화 방식 (salt 함수 사용하지 않고 간단하게 구현) 
         String encUserPwd = DataCipher.encryptDataToString(param.get("userid").toString(), param.get("password").toString());
+        //String encUserPwd = param.get("password").toString();
             
         if (userList.size() == 0) {
             
