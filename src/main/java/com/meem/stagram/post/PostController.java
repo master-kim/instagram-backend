@@ -36,7 +36,8 @@ public class PostController {
     public List<PostEntity> postList(HttpServletRequest request) throws Exception{
         
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
-       
+        //String sessionUserId = "kimyohan";
+        
         List<PostEntity> postList = postserviceimpl.postList(sessionUserId);
         
         return postList;

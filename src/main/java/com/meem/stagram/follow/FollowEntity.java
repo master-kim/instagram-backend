@@ -1,15 +1,8 @@
 package com.meem.stagram.follow;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.meem.stagram.user.UserEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,17 +31,4 @@ public class FollowEntity {
     public String    followerList;
     public String    createDt;
     public String    updateDt;
-    
-    //@ManyToOne
-    //@JoinColumn(name = "follow_id", insertable = false, updatable = false)
-    //private FollowEntity followentity;
-    
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "followerList")
-    //private FollowEntity followentity;
-    
-    //@ManyToOne
-    //@JoinColumn(name = "UserEntityUserId")
-    //private UserEntity userentity;
-    
 }

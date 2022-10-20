@@ -45,18 +45,9 @@ public class UserEntity {
     public Integer userType;
     public String  createDt;    
     public String  updateDt;
-
     
-    //@ManyToOne
-    //@JoinColumn(name = "t_follow_user_id")
-    //private FollowEntity team;
-    
-    //@OneToMany
-    //@JoinColumn(name = "t_follow_ibfk_1") // Comment 테이블의 post_id 를 말한다. (FK)
-    //private List<FollowEntity> comments = new ArrayList<>();
-    
-    //@OneToMany(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    //@JoinColumn(name = "t_follow", referencedColumnName = "userId")
-    //private List<FollowEntity> followentity;
+    @ManyToOne
+    @JoinColumn(name = "userId" , insertable=false, updatable=false)
+    public FollowEntity followentity;
     
 }

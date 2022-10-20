@@ -39,7 +39,7 @@ public class UserServiceImpl {
         
     }
     
-    // 특정 ID 조회
+    // 2022.10.20.김요한.수정 - 로그인 시 암호화된 데이터 확인 후 성공 여부 뿌려주기
     public HashMap<String, Object> findByUserId(Map<String, Object> param) {
         
         HashMap<String, Object> result = new HashMap<>();

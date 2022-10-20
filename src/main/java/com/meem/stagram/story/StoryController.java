@@ -3,7 +3,6 @@ package com.meem.stagram.story;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,8 @@ public class StoryController {
     public List<StoryEntity> storyList(HttpServletRequest request) throws Exception{
         
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
-       
+        //String sessionUserId = "kimyohan";
+        
         List<StoryEntity> storyList = storyserviceimpl.findByUserIdIn(sessionUserId);
         
         return storyList;

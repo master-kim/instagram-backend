@@ -2,13 +2,14 @@ package com.meem.stagram.post;
 
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.meem.stagram.file.FileEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,5 +44,9 @@ public class PostEntity {
     public String    postLikeYn;
     public String    createDt;
     public String    updateDt;
+    
+    @ManyToOne
+    @JoinColumn(name = "postId" , insertable=false, updatable=false)
+    public FileEntity fileentity;
     
 }

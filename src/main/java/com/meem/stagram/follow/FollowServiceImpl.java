@@ -47,6 +47,13 @@ public class FollowServiceImpl {
     @Autowired
     IFollowRepository ifollowrepository;
 
+    public List<FollowEntity> findAll() {
+        
+        List<FollowEntity> resultList = ifollowrepository.findAll();
+        
+        return resultList;
+    }
+    
     public List<FollowEntity> followList(String sessionUserId) {
         List<FollowEntity> test = ifollowrepository.findByUserId(sessionUserId);
         return test;
