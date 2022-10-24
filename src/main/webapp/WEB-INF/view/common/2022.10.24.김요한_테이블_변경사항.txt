@@ -1,0 +1,61 @@
+#-------------------------------------------------------------
+# 제목 : 2022.10.24.김요한_포스트테이블_컬럼추가
+#------------------------------------------------------------- 
+# 작업일          작업자    작업내용
+#------------------------------------------------------------- 
+# 2022.10.24    김요한    최초작성 
+#-------------------------------------------------------------
+
+1. 테이블 변경 사항 (적용방법)
+
+ 변경사항 : t_file -> t_user_file 용도 (프로필 사진 저장)
+         : t_story 테이블 user_nick 컬럼 삭제 (t_user_info 테이블과 조인 하였으므로 불필요)
+         
+ 추가사항 : t_story_file (스토리 이미지 파일 저장) , t_post_file (게시글 이미지 파일 저장)
+
+-- 컬럼 삭제 쿼리
+ALTER TABLE t_story DROP COLUMN  user_nick;
+
+-- 테이블 삭제 쿼리
+DROP TABLE IF EXISTS t_file;
+
+DROP TABLE IF EXISTS t_user_file;
+DROP TABLE IF EXISTS t_story_file;
+DROP TABLE IF EXISTS t_post_file;
+
+
+-- 유저 이미지 파일 테이블
+CREATE TABLE IF NOT EXISTS t_user_file (
+      file_id         INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+    , user_id         VARCHAR(128)   NOT NULL
+    , file_nm         VARCHAR(128)   NOT NULL
+    , file_type       VARCHAR(16)    NOT NULL
+    , file_location   VARCHAR(128)   NOT NULL
+    , create_dt       TIMESTAMP    
+    , update_dt       TIMESTAMP    
+    , FOREIGN KEY (user_id) REFERENCES t_user_info(user_id)
+);
+
+-- 스토리 파일 테이블
+CREATE TABLE IF NOT EXISTS t_story_file (
+      file_id         INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+    , story_id        INTEGER        NOT NULL
+    , file_nm         VARCHAR(128)   NOT NULL
+    , file_type       VARCHAR(16)    NOT NULL
+    , file_location   VARCHAR(128)   NOT NULL
+    , create_dt       TIMESTAMP    
+    , update_dt       TIMESTAMP    
+    , FOREIGN KEY (story_id) REFERENCES t_story(story_id)
+);
+
+-- 스토리 파일 테이블
+CREATE TABLE IF NOT EXISTS t_post_file (
+      file_id         INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+    , post_id        INTEGER         NOT NULL
+    , file_nm         VARCHAR(128)   NOT NULL
+    , file_type       VARCHAR(16)    NOT NULL
+    , file_location   VARCHAR(128)   NOT NULL
+    , create_dt       TIMESTAMP    
+    , update_dt       TIMESTAMP    
+    , FOREIGN KEY (post_id) REFERENCES t_post(post_id)
+);

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.meem.stagram.dto.RequstDTO;
+
 /**
  * 설명 : ITestServiceInterface.java 
  * ------------------------------------------------------------- 
@@ -32,4 +34,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     
     // 추가
     List<UserEntity> findByUserId(String userId);
+
+    void save(RequstDTO.userRegister userRegister);
 }

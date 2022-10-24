@@ -1,12 +1,12 @@
 package com.meem.stagram.user;
 
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import com.meem.stagram.follow.FollowEntity;
 
@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
  * ------------------------------------------------------------- 
  * 2022.10.01    김요한    최초작성 
  * 2022.10.05    김요한    설명 추가 및 소스 정리
+ * 2022.10.20    김요한    FollowEntity 조인 완료
  * -------------------------------------------------------------
  */
 

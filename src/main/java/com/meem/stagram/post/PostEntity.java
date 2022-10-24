@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.meem.stagram.file.FileEntity;
+import com.meem.stagram.file.PostFileEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
  * 2022.10.01    김요한    최초작성 
  * 2022.10.05    김요한    설명 추가 및 소스 정리
  * 2022.10.17    김요한    테이블 매핑처리 완료
+ * 2022.10.20    김요한    PostFileEntity 조인완료
  * -------------------------------------------------------------
  */
 
@@ -45,8 +46,11 @@ public class PostEntity {
     public String    createDt;
     public String    updateDt;
     
-    @ManyToOne
-    @JoinColumn(name = "postId" , insertable=false, updatable=false)
-    public FileEntity fileentity;
+    /*
+     * @ManyToOne
+     * 
+     * @JoinColumn(name = "postId" , insertable=false, updatable=false) public
+     * PostFileEntity postfileentity;
+     */
     
 }

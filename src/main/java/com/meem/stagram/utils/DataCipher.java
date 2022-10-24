@@ -18,7 +18,7 @@ public class DataCipher {
     
     public static String encryptDataToString(String i_strUserId, String i_strPassword) {
         
-        String resultData = null;
+        String resultData = "";
         
         try {
             /* MessageDigest 클래스의 getInstance() 메소드의 매개변수에 "SHA-256" 알고리즘 이름을 지정함으로써 
