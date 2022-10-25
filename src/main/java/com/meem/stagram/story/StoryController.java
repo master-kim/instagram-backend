@@ -32,11 +32,9 @@ public class StoryController {
     public List<StoryEntity> storyList(HttpServletRequest request) throws Exception{
         
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
-        //String sessionUserId = "kimyohan";
         
-        List<StoryEntity> storyList = storyserviceimpl.findByUserIdIn(sessionUserId);
-        
-        return storyList;
+        return storyserviceimpl.findByUserIdIn(sessionUserId);
     }
+    
     
 }

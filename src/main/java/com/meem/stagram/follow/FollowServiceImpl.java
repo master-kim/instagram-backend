@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.meem.stagram.dto.RequstDTO;
+import com.meem.stagram.dto.RequstDTO.userRegister;
 import com.meem.stagram.user.UserEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -57,6 +59,15 @@ public class FollowServiceImpl {
     public List<FollowEntity> followList(String sessionUserId) {
         List<FollowEntity> test = ifollowrepository.findByUserId(sessionUserId);
         return test;
+    }
+    
+    // 2022.10.25.김요한.추가 - entity가 보호되어있으므로 UserServiceImpl에서 새로 생성 불가로 인해 Impl로 접근 시켜 save
+    public void followRegister(RequstDTO.userRegister userRegister) {
+        
+        FollowEntity userfollow = new FollowEntity();
+        userfollow.FollowRegister(userRegister);
+        ifollowrepository.save(userfollow);
+        
     }
     
 }

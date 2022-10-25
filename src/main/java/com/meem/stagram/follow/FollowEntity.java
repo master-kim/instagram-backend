@@ -1,11 +1,18 @@
 package com.meem.stagram.follow;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.meem.stagram.dto.RequstDTO.userRegister;
+import com.meem.stagram.user.UserEntity;
+import com.meem.stagram.user.UserEntity.VoidBuilder;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +30,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor                                 // 롬복 제공 : 필드에 사용한 모든생성자만 만들어주는 역할
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 롬복 제공 : 기본 생성자를 만들어 준다
 @Entity
-@Table(name = "t_follow")                            
+@Table(name = "t_follow")   
 public class FollowEntity {
     
     @Id                     // 기본키 매핑 전략 위한 어노테이션
@@ -31,4 +38,13 @@ public class FollowEntity {
     public String    followerList;
     public String    createDt;
     public String    updateDt;
+    
+    @Builder
+    public void FollowRegister(userRegister userRegister) {
+        this.userId = userRegister.getUserId();
+        this.followerList = "[]";  // default 데이터
+        this.createDt = LocalDate.now().toString();
+        this.updateDt = LocalDate.now().toString();
+    }
+    
 }

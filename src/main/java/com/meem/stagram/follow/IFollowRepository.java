@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.meem.stagram.dto.RequstDTO.userRegister;
+
 /**
  * 설명 : ITestServiceInterface.java 
  * ------------------------------------------------------------- 
@@ -22,4 +24,5 @@ import org.springframework.stereotype.Repository;
 public interface IFollowRepository extends JpaRepository<FollowEntity, Long> {
 
     List<FollowEntity> findByUserId(String userId);
+    
 }

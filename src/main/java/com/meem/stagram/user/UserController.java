@@ -34,22 +34,6 @@ public class UserController {
     @Autowired
     UserServiceImpl userserviceimpl;
     
-    // 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
-    //@GetMapping("/userLogin")
-    //@PostMapping("/userLogin")
-    //public HashMap<String, Object> userLogin(HttpServletRequest request , @RequestBody Map<String, Object> param ) throws Exception{
-    //    
-    //    // 세션에 유저 아이디 저장
-    //    HttpSession session = request.getSession();
-    //    String userId = param.get("userid").toString();
-    //    session.setAttribute("user_id", userId);
-    //    
-    //    // 해당 유저 데이터가 맞는지 확인
-    //    HashMap<String, Object> result = userserviceimpl.findByUserId(param);
-    //    
-    //    return result;
-    //}
-    
     /**
      * 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
      * 2022.10.24.김요한.추가 - @Valid 추가 - 잘못 입력시 Exception 오류 처리
@@ -72,10 +56,8 @@ public class UserController {
      * 2022.10.21.김요한.추가 - 유저 회원가입
      * 2022.10.24.김요한.추가 - @Valid 추가 - 잘못 입력시 Exception 오류 처리
      * */
-    //@GetMapping("/userRegister")
     @PostMapping("/userRegister")
     public HashMap<String, Object> userRegister(HttpServletRequest request , @RequestBody @Valid RequstDTO.userRegister userRegister) throws Exception{
-        
         
         HttpSession session = request.getSession();
         

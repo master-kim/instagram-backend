@@ -30,4 +30,6 @@ public interface IStoryRepository extends JpaRepository<StoryEntity, Long> {
     //           + "           t1.user_id = t2.user_id  \r\n"
     //           + "           )", nativeQuery= true)
     List<StoryEntity> findByUserIdIn(List<String> userId);
+    
+    
 }

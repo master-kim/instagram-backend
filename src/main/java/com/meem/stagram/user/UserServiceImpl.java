@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meem.stagram.dto.RequstDTO;
+import com.meem.stagram.follow.FollowServiceImpl;
 import com.meem.stagram.utils.DataCipher;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,9 @@ public class UserServiceImpl {
     
     @Autowired
     IUserRepository iuserrepository;
+    
+    @Autowired
+    FollowServiceImpl followserviceimpl;
     
     //전체 리스트 조회
     public List<UserEntity> findAll() {
@@ -81,11 +85,13 @@ public class UserServiceImpl {
         
         if (0 == userList.size()) {
             
-            //String encUserPwd = DataCipher.encryptDataToString(userId, userPwd);
-            //
-            //userRegister.setUserPwd(encUserPwd);
-            //
-            //iuserrepository.save(userRegister);
+            String encUserPwd = DataCipher.encryptDataToString(userId, userPwd);
+            userRegister.setUserPwd(encUserPwd);
+            
+            UserEntity userInsert = new UserEntity();
+            userInsert.UserRegister(userRegister);
+            iuserrepository.save(userInsert);
+            followserviceimpl.followRegister(userRegister);
             
             result.put("resultCd", "SUCC");
             result.put("resultMsg", "가입에 성공하셨습니다.");
@@ -95,113 +101,6 @@ public class UserServiceImpl {
             result.put("resultMsg", "동일한 아이디가 존재합니다.");
         }
         
-//        if (userRegister.getUserPwd().equals(userRegister.getUserPwdChk())) {
-//        } else {
-//          result.put("resultCd", "FAIL");
-//          result.put("resultMsg", "비밀번호와 비밀번호 체크 부분이 맞지 않습니다.");
-//        }
-        //
-        
-//        UserEntity saveData = new UserEntity();
-//        
-//        HashMap<String, Object> result = new HashMap<>();
-//        
-//        String userId     = param.get("user_id").toString();
-//        String userNick   = param.get("nick_name").toString();
-//        String userNm     = param.get("user_name").toString();
-//        String userPwd    = param.get("password").toString();
-//        String userPwdChk = param.get("password_check").toString();
-//        String userEmail  = param.get("user_email").toString();
-//        String userPhone  = param.get("user_phone").toString();
-//        
-//        // 1단계 : 테이블에 동일한 ID 존재 여부 확인
-//        List<UserEntity> userList = iuserrepository.findByUserId(userId);
-//        
-//        String chkResult = "";
-//        
-//        if (0 == userList.size()) {
-//            
-//            String[] chkInput = new String[4];
-//            chkInput[0] = userId;
-//            chkInput[1] = userNick;
-//            chkInput[2] = userNm;
-//            chkInput[3] = userPwd;
-//            
-//            // 2단계 : 필수 입력 값 빈값 허용 X 
-//            for (int idx = 0 , Looplen = chkInput.length; idx < Looplen; idx++) {
-//                chkResult = validation.strEmptyCheck(chkInput[idx]);
-//                
-//                if (chkResult.equals("ERROR")) {
-//                    break;
-//                } else {;}
-//                
-//            }
-//            
-//            if (chkResult.equals("SUCC")) {
-//                
-//                // 3단계 : 패스워드 , 패스워드 체크 부분 동일한지 확인
-//                chkResult = validation.strCompareCheck(userPwd , userPwdChk);
-//                
-//                if (chkResult.equals("SUCC")) {
-//                    // 4단계 : 이메일 형식 확인
-//                    
-//                    chkResult = validation.isValidEmail(userEmail);
-//                    
-//                    if (chkResult.equals("SUCC")) {
-//                        
-//                        chkResult = validation.isValidPhoneNumber(userPhone);
-//                        
-//                        if (chkResult.equals("SUCC")) {
-//                            
-//                            saveData.userId = userId;
-//                            saveData.userNick = userNick;
-//                            saveData.userNm = userNm;
-//                            saveData.userPwd = userPwd;
-//                            saveData.userProfile = "";
-//                            saveData.userEmail = userEmail;
-//                            saveData.userType = 1;
-//                            saveData.userPhone = userPhone;
-//                            
-//                            iuserrepository.save(saveData);
-//                            
-//                            result.put("resultCd", "SUCC");
-//                            result.put("resultMsg", "가입에 성공하셨습니다.");
-//                            
-//                        } else {
-//                            result.put("resultCd", "FAIL");
-//                            result.put("resultMsg", "핸드폰 번호를 형식에 맞춰주세요.");
-//                        }
-//                        
-//                    } else {
-//                        result.put("resultCd", "FAIL");
-//                        result.put("resultMsg", "이메일 형식을 맞춰주세요.");
-//                    }
-//                    
-//                } else {
-//                    result.put("resultCd", "FAIL");
-//                    result.put("resultMsg", "비밀번호와 비밀번호 체크 부분이 맞지 않습니다.");
-//                }
-//            } else {
-//                result.put("resultCd", "FAIL");
-//                result.put("resultMsg", "필수 입력 값을 입력하세요.");
-//            }
-//            
-//        } else {
-//            result.put("resultCd", "FAIL");
-//            result.put("resultMsg", "동일한 아이디가 존재합니다.");
-//        }
-        
         return result;
     }
-
 }
-
-
-
-
-
-
-
-
-
-

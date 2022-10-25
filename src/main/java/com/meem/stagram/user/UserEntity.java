@@ -1,5 +1,8 @@
 package com.meem.stagram.user;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -8,10 +11,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.meem.stagram.dto.RequstDTO.userRegister;
 import com.meem.stagram.follow.FollowEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,7 +39,7 @@ import lombok.NoArgsConstructor;
 public class UserEntity {
     
     //@GeneratedValue(strategy = GenerationType.IDENTITY) 자동증분
-    
+
     @Id                     // 기본키 매핑 전략 위한 어노테이션
     public String  userId;
     public String  userNm;
@@ -44,11 +49,24 @@ public class UserEntity {
     public String  userPhone;
     public String  userEmail;
     public Integer userType;
-    public String  createDt;    
+    public String  createDt;   
     public String  updateDt;
     
     @ManyToOne
     @JoinColumn(name = "userId" , insertable=false, updatable=false)
     public FollowEntity followentity;
     
+    @Builder
+    public void UserRegister(userRegister userRegister) {
+        this.userId = userRegister.getUserId();
+        this.userNm = userRegister.getUserName();
+        this.userNick = userRegister.getUserNick();
+        this.userPwd = userRegister.getUserPwd();
+        this.userProfile = "";
+        this.userPhone = userRegister.getUserPhone();
+        this.userEmail = userRegister.getUserEmail();
+        this.userType = 1;
+        this.createDt = LocalDate.now().toString();
+        this.updateDt = LocalDate.now().toString();
+    }
 }

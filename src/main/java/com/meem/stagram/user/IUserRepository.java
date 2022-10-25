@@ -34,6 +34,4 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     
     // 추가
     List<UserEntity> findByUserId(String userId);
-
-    void save(RequstDTO.userRegister userRegister);
 }
