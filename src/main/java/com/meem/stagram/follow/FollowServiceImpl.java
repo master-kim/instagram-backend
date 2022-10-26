@@ -1,14 +1,16 @@
 package com.meem.stagram.follow;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meem.stagram.dto.RequstDTO;
-import com.meem.stagram.dto.RequstDTO.userRegister;
+import com.meem.stagram.post.IPostRepository;
+import com.meem.stagram.user.IUserRepository;
 import com.meem.stagram.user.UserEntity;
+import com.meem.stagram.utils.CommonUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +49,13 @@ import lombok.RequiredArgsConstructor;
 public class FollowServiceImpl {
     
     @Autowired
+    IPostRepository ipostrepository;
+    
+    @Autowired
     IFollowRepository ifollowrepository;
+    
+    @Autowired
+    IUserRepository iuserrepository;
 
     public List<FollowEntity> findAll() {
         
@@ -56,9 +64,21 @@ public class FollowServiceImpl {
         return resultList;
     }
     
-    public List<FollowEntity> followList(String sessionUserId) {
-        List<FollowEntity> test = ifollowrepository.findByUserId(sessionUserId);
-        return test;
+    public List<UserEntity> followList(String sessionUserId) throws Exception {
+        
+        // 결과값을 담는 배열 선언
+        List<UserEntity> resultList = new ArrayList<>();
+        
+        // 해당 유저에 대한 followList를 가져오는 스트링 배열 (공통 함수 처리)
+        List<String> strList = CommonUtils.followList(sessionUserId , ifollowrepository);
+        
+        // 팔로우 리스트 영역 내영역제거
+        strList.remove(sessionUserId);
+            
+        // 실질적인 결과 값
+        resultList = iuserrepository.findByUserIdNotIn(strList);
+        
+        return resultList;
     }
     
     // 2022.10.25.김요한.추가 - entity가 보호되어있으므로 UserServiceImpl에서 새로 생성 불가로 인해 Impl로 접근 시켜 save

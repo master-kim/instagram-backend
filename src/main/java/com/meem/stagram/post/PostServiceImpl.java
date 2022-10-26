@@ -2,18 +2,11 @@ package com.meem.stagram.post;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import com.meem.stagram.follow.FollowEntity;
 import com.meem.stagram.follow.IFollowRepository;
-import com.meem.stagram.story.IStoryRepository;
-import com.meem.stagram.story.StoryEntity;
 import com.meem.stagram.user.IUserRepository;
 import com.meem.stagram.utils.CommonUtils;
 
