@@ -71,9 +71,6 @@ public class FollowServiceImpl {
         
         // 해당 유저에 대한 followList를 가져오는 스트링 배열 (공통 함수 처리)
         List<String> strList = CommonUtils.followList(sessionUserId , ifollowrepository);
-        
-        // 팔로우 리스트 영역 내영역제거
-        strList.remove(sessionUserId);
             
         // 실질적인 결과 값
         resultList = iuserrepository.findByUserIdNotIn(strList);

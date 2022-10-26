@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
  * ------------------------------------------------------------- 
  * 2022.10.01    김요한    최초작성 
  * 2022.10.20    김요한    데이터 암호화 추가 (login) 
+ * 2022.10.27    김요한    로그인 시 userId , userNick 넘겨주기 추가 
  * -------------------------------------------------------------
  */
 
@@ -65,6 +66,10 @@ public class UserServiceImpl {
             if (userDbPwd.equals(encUserPwd)) {
                 result.put("resultCd", "SUCC");
                 result.put("resultMsg" , "로그인에 성공하셨습니다.");
+                
+                // 2022.10.27.김요한.수정 - 로그인 시 userId , userNick 넘겨주기 추가 
+                result.put("userId", userList.get(0).userId);
+                result.put("userNick" , userList.get(0).userNick);
             } else {
                 result.put("resultCd", "FAIL");
                 result.put("resultMsg", "비밀번호가 맞지않습니다.");
