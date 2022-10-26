@@ -24,6 +24,7 @@ import com.meem.stagram.dto.RequstDTO;
  * ------------------------------------------------------------- 
  * 2022.10.01    김요한    최초작성 
  * 2022.10.24    김요한    RequstDTO를 통해 Exception 관리 및 공통 데이터 관리 추가
+ * 2022.10.26    김요한    로그아웃 추가 (세션 삭제)
  * -------------------------------------------------------------
  */
 
@@ -53,6 +54,25 @@ public class UserController {
     }
     
     /**
+     * 2022.10.26.김요한.추가 - 로그아웃
+     * */
+    @PostMapping("/userLogout")
+    public HashMap<String, Object> userLogout(HttpServletRequest request) throws Exception{
+        
+        // 세션에 유저 아이디 저장
+        HttpSession session = request.getSession();
+        session.removeAttribute("user_id");
+        
+        // 해당 유저 데이터가 맞는지 확인
+        HashMap<String, Object> result = new HashMap<>();
+        
+        result.put("resultCd", "SUCC");
+        result.put("resultMsg", "로그아웃에 성공하였습니다.");
+        
+        return result;
+    }
+    
+    /**
      * 2022.10.21.김요한.추가 - 유저 회원가입
      * 2022.10.24.김요한.추가 - @Valid 추가 - 잘못 입력시 Exception 오류 처리
      * */
@@ -65,4 +85,6 @@ public class UserController {
         
         return result;
     }
+    
+    
 }
