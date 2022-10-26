@@ -41,6 +41,8 @@ public class CommonUtils {
             
             } else {;}
             
+            // 5. 내가 올린 스토리, 게시글도 가져오기 위해 결과값에 추가
+            strList.add(i_str_user_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
