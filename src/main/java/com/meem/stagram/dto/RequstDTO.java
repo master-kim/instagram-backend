@@ -30,14 +30,14 @@ public class RequstDTO {
     public static class userLogin {
         
         @NotNull
-        @NotBlank(message = "유저 아이디를 입력하셔야 합니다.")
-        @NotEmpty(message = "유저 아이디에는 스페이스를 포함 하실수 없습니다.")
-        String userId;
+        //@NotBlank(message = "유저 아이디를 입력하셔야 합니다.")
+        @NotEmpty(message = "유저 아이디에는 공백문자 또는 빈 값은 불가능합니다.")
+        private String userId;
         
         @NotNull
-        @NotBlank(message = "유저 비밀번호를 입력하셔야 합니다.")
-        @NotEmpty(message = "유저 비밀번호에는 스페이스를 포함 하실수 없습니다.")
-        String userPwd;
+        //@NotBlank(message = "유저 비밀번호를 입력하셔야 합니다.")
+        @NotEmpty(message = "유저 비밀번호에는 공백문자 또는 빈 값은 불가능합니다.")
+        private String userPwd;
         
         @Builder
         public userLogin(String i_user_id, String i_user_pwd) {
@@ -52,39 +52,39 @@ public class RequstDTO {
     public static class userRegister {
         
         @NotNull
-        @NotBlank(message = "유저 아이디를 반드시 입력해야합니다.")
+        @NotEmpty(message = "유저 아이디를 공백문자 또는 빈 값은 불가능합니다.")
         /* @Size(min = 2, max = 16, message = "아이디를 2~16자 사이로 입력해주세요.") */
         @Pattern(regexp="[a-zA-Z1-9]{6,12}", message = "유저 아이디는 영어와 숫자로 포함해서 6~16자리 이내로 입력해주세요.")
         String userId;
         
         @NotNull
-        @NotBlank(message = "유저 닉네임을 반드시 입력해야합니다.")
-        @NotEmpty(message = "유저 닉네임에는 스페이스를 포함 하실수 없습니다.")
+        //@NotBlank(message = "유저 닉네임을 반드시 입력해야합니다.")
+        @NotEmpty(message = "유저 닉네임에는 공백문자 또는 빈 값은 불가능합니다.")
         String userNick;
         
         @NotNull
-        @NotBlank(message = "유저 이름을 반드시 입력해야합니다.")
-        @NotEmpty(message = "유저 이름에는 스페이스를 포함 하실수 없습니다.")
+        //@NotBlank(message = "유저 이름을 반드시 입력해야합니다.")
+        @NotEmpty(message = "유저 이름에는 공백문자 또는 빈 값은 불가능합니다.")
         /* @Pattern(regexp="[a-zA-Z|가-힣]", message = "유저이름에는 한글과 영어만 입력가능합니다.") */
         @Size(min = 2, max = 8, message = "유저이름은 2~8자 사이로 입력해주세요.")
         String userName;
         
         @NotNull
-        @NotBlank(message = "유저 패스워드를 반드시 입력해야합니다.")
+        //@NotBlank(message = "유저 패스워드에는 스페이스를 포함 하실수 없습니다.")
+        @NotEmpty(message = "유저 패스워드 부분에는 공백문자 또는 빈 값은 불가능합니다.")
         @Pattern(regexp="[a-zA-Z1-9]{6,18}", message = "비밀번호는 영어와 숫자로 포함해서 6~18자리 이내로 입력해주세요.")
-        @NotEmpty(message = "유저 패스워드에는 스페이스를 포함 하실수 없습니다.")
         String userPwd;
         
         @NotNull
-        @NotBlank(message = "유저 패스워드 확인을 반드시 입력해야합니다.")
+        @NotEmpty(message = "유저 패스워드 확인 부분에는 공백문자 또는 빈 값은 불가능합니다.")
         String userPwdChk;
         
         @Email
-        @NotEmpty(message = "유저 이메일에는 스페이스를 포함 하실수 없습니다.")
+        @NotEmpty(message = "유저 이메일에 부분에는 공백문자 또는 빈 값은 불가능합니다.")
         String userEmail;
         
         @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "10 ~ 11 자리의 숫자만 입력 가능합니다.")
-        @NotEmpty(message = "유저 핸드폰에는 스페이스를 포함 하실수 없습니다.")
+        @NotEmpty(message = "유저 핸드폰 부분에는 공백문자 또는 빈 값은 불가능합니다.")
         String userPhone;
         
         @Builder
