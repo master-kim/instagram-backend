@@ -1,18 +1,17 @@
 package com.meem.stagram.user;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
-import com.meem.stagram.dto.RequstDTO.userRegister;
+import com.meem.stagram.dto.RequestDTO;
+import com.meem.stagram.dto.RequestDTO.userRegister;
 import com.meem.stagram.follow.FollowEntity;
+import com.meem.stagram.post.PostEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -57,16 +56,21 @@ public class UserEntity {
     public FollowEntity followentity;
     
     @Builder
-    public void UserRegister(userRegister userRegister) {
-        this.userId = userRegister.getUserId();
-        this.userNm = userRegister.getUserName();
-        this.userNick = userRegister.getUserNick();
-        this.userPwd = userRegister.getUserPwd();
-        this.userProfile = "";
-        this.userPhone = userRegister.getUserPhone();
-        this.userEmail = userRegister.getUserEmail();
-        this.userType = 1;
-        this.createDt = LocalDate.now().toString();
-        this.updateDt = LocalDate.now().toString();
+    public static UserEntity UserRegister(userRegister userRegister , String encUserPwd) {
+        
+        UserEntity UserEntity = new UserEntity();
+        
+        UserEntity.userId = userRegister.getUserId();
+        UserEntity.userNm = userRegister.getUserName();
+        UserEntity.userNick = userRegister.getUserNick();
+        UserEntity.userPwd = encUserPwd;
+        UserEntity.userProfile = "";
+        UserEntity.userPhone = userRegister.getUserPhone();
+        UserEntity.userEmail = userRegister.getUserEmail();
+        UserEntity.userType = 1;
+        UserEntity.createDt = LocalDate.now().toString();
+        UserEntity.updateDt = LocalDate.now().toString();
+        
+        return UserEntity;
     }
 }

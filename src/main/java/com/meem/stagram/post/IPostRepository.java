@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.meem.stagram.story.StoryEntity;
+import com.meem.stagram.user.UserEntity;
 
 /**
  * 설명 : ITestServiceInterface.java 
@@ -31,5 +32,10 @@ public interface IPostRepository extends JpaRepository<PostEntity, Long> {
     //           + "        ON (                        \r\n"
     //           + "           t1.user_id = t2.user_id  \r\n"
     //           + "           )", nativeQuery= true)
-    List<PostEntity> findByUserIdIn(List<String> strList);
+    List<PostEntity> findByUserIdIn(List<String> strList) throws Exception;
+
+    List<PostEntity> findByUserId(String userId) throws Exception;
+
+    PostEntity findByPostId(Integer postId) throws Exception;
+
 }

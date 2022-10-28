@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.meem.stagram.post.PostEntity;
+
 /**
  * 설명 : IStoryRepository.java 
  * ------------------------------------------------------------- 
@@ -30,6 +32,5 @@ public interface IStoryRepository extends JpaRepository<StoryEntity, Long> {
     //           + "           t1.user_id = t2.user_id  \r\n"
     //           + "           )", nativeQuery= true)
     List<StoryEntity> findByUserIdIn(List<String> userId);
-    
     
 }

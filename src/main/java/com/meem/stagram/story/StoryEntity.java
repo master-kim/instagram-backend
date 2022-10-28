@@ -1,5 +1,7 @@
 package com.meem.stagram.story;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.meem.stagram.file.StoryFileEntity;
+import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.user.UserEntity;
 
 import lombok.AccessLevel;
@@ -38,15 +40,25 @@ public class StoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer   storyId;
     public String    userId;
-    // join으로 인한 삭제처리
-    //public String    userNick;
-    public String    fileId;
-    public String    content;
+    public String    storyContent;
     public String    createDt;
     
     @ManyToOne
     @JoinColumn(name = "userId" , insertable=false, updatable=false)
     public UserEntity userentity;
+
+    public static StoryEntity storyCreate(RequestDTO.storyCreate storyCreateInfo) {
+        
+        StoryEntity StoryEntity = new StoryEntity();
+        
+        StoryEntity.storyId        = null;
+        StoryEntity.userId         = storyCreateInfo.getUserId().toString();
+        StoryEntity.storyContent   = storyCreateInfo.getStoryContent().toString();
+        StoryEntity.createDt       = LocalDate.now().toString();   
+        
+        return StoryEntity;
+        
+    }
     
 //    @ManyToOne
 //    @JoinColumn(name = "storyId" , insertable=false, updatable=false)

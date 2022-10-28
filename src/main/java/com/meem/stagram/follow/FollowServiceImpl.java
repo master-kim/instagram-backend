@@ -3,10 +3,9 @@ package com.meem.stagram.follow;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.meem.stagram.dto.RequstDTO;
+import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.post.IPostRepository;
 import com.meem.stagram.user.IUserRepository;
 import com.meem.stagram.user.UserEntity;
@@ -48,14 +47,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowServiceImpl {
     
-    @Autowired
-    IPostRepository ipostrepository;
+    private final IPostRepository ipostrepository;
     
-    @Autowired
-    IFollowRepository ifollowrepository;
+    private final IFollowRepository ifollowrepository;
     
-    @Autowired
-    IUserRepository iuserrepository;
+    private final IUserRepository iuserrepository;
 
     public List<FollowEntity> findAll() {
         
@@ -79,7 +75,7 @@ public class FollowServiceImpl {
     }
     
     // 2022.10.25.김요한.추가 - entity가 보호되어있으므로 UserServiceImpl에서 새로 생성 불가로 인해 Impl로 접근 시켜 save
-    public void followRegister(RequstDTO.userRegister userRegister) {
+    public void followRegister(RequestDTO.userRegister userRegister) {
         
         FollowEntity userfollow = new FollowEntity();
         userfollow.FollowRegister(userRegister);

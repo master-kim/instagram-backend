@@ -1,14 +1,17 @@
 package com.meem.stagram.post;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.meem.stagram.dto.RequestDTO;
+import com.meem.stagram.file.IFileRepository;
 import com.meem.stagram.follow.IFollowRepository;
-import com.meem.stagram.user.IUserRepository;
 import com.meem.stagram.utils.CommonUtils;
+import com.meem.stagram.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,26 +48,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service("postserviceimpl")
 @RequiredArgsConstructor
-public class PostServiceImpl {
+public class PostServiceImpl implements IPostService {
     
-    @Autowired
-    IPostRepository ipostrepository;
+    private final IPostRepository ipostrepository;
     
-    @Autowired
-    IFollowRepository ifollowrepository;
+    private final IFollowRepository ifollowrepository;
     
-    @Autowired
-    IUserRepository iuserrepository;
-    
-    
-    // 전체 리스트 조회
-    public List<PostEntity> findAll() {
-        
-        List<PostEntity> test = ipostrepository.findAll();
-        
-        return test;
-        
-    }
+    private final IFileRepository ifilerepository;
     
     // 전체 리스트 조회
     public List<PostEntity> postList(String sessionUserId) throws Exception{
@@ -88,5 +78,84 @@ public class PostServiceImpl {
         return resultList;
     }
     
+    // 게시글 작성
+    public HashMap<String, Object> postCreate(MultipartFile fileInfo , RequestDTO.postCreate postCreateInfo) throws Exception{
+        
+        // 결과값을 담는 배열 선언
+        HashMap<String, Object> resultList = new HashMap<>();
+        
+        // 파일 생성에 대한 결과값을 담는 해시맵
+        HashMap<String, Object> fileResult = new HashMap<>();
+        
+        // 파일 생성 시 필요한 String 값
+        String folderType = postCreateInfo.getFileFolder().toString();
+        
+        // 게시글 테이블 (t_post) 에 데이터 넣기 위한 정보
+        PostEntity fileSaveInfo = PostEntity.postCreate(postCreateInfo);
+        
+        // 반환하는 값은 int 이지만 FileUtils.fileCreate > kind_id 값을 통해 구분해야하므로 String으로 변경
+        String postResult = ipostrepository.save(fileSaveInfo).getPostId().toString();
+        
+        if (postResult.equals(null) || postResult.equals("")) {
+            resultList.put("resultCd" , "FAIL");
+            resultList.put("resultMsg" , "게시글 생성이 오류");
+        } else {
+            fileResult = FileUtils.fileCreate( folderType ,postResult , fileInfo , ifilerepository);
+            
+            if (fileResult.get("resultCd").toString().toUpperCase().equals("FAIL")) {
+                resultList.put("resultCd" , fileResult.get("resultCd"));
+                resultList.put("resultMsg" , fileResult.get("resultMsg"));
+            } else {
+                resultList.put("resultCd" , "SUCC");
+                resultList.put("resultMsg" , "정상작동");
+            }
+        }
+        
+        return resultList;
+    }
+
+    @Override
+    public HashMap<String, Object> postUpdate(MultipartFile fileInfo, RequestDTO.postUpdate postUpdateInfo) throws Exception {
+        
+        // 결과값을 담는 해시맵
+        HashMap<String, Object> resultList = new HashMap<>();
+        
+        // 파일 생성에 대한 결과값을 담는 해시맵
+        HashMap<String, Object> fileResult = new HashMap<>();
+        
+        // 파일 생성 시 필요한 String 값
+        String folderType = postUpdateInfo.getFileFolder().toString();
+        
+        /**
+         * int     : 산술 연산이 가능하다. null로 초기화 할 수 없다.
+         * integer : null 값 처리가 용이하기 때문에 SQL과 연동할 경우 처리가 용이하다.
+         * */
+        
+        // 기존 데이터 CreateDt 가져오기위해 Select
+        PostEntity postList = ipostrepository.findByPostId(Integer.parseInt(postUpdateInfo.getPostId().toString()));
+        
+        // 게시글 테이블 (t_post) 에 데이터 넣기 위한 정보
+        PostEntity postUpdate = PostEntity.postUpdate(postUpdateInfo , postList);
+        
+        // 반환하는 값은 int 이지만 FileUtils.fileCreate > kind_id 값을 통해 구분해야하므로 String으로 변경
+        String postId = ipostrepository.save(postUpdate).getPostId().toString();
+        
+        if (postId.equals(null) || postId.equals("")) {
+            resultList.put("resultCd" , "FAIL");
+            resultList.put("resultMsg" , "게시글 생성이 오류");
+        } else {
+            fileResult = FileUtils.fileUpdate( folderType , postId , fileInfo , ifilerepository);
+            
+            if (fileResult.get("resultCd").toString().toUpperCase().equals("FAIL")) {
+                resultList.put("resultCd" , fileResult.get("resultCd"));
+                resultList.put("resultMsg" , fileResult.get("resultMsg"));
+            } else {
+                resultList.put("resultCd" , "SUCC");
+                resultList.put("resultMsg" , "정상작동");
+            }
+        }
+        
+        return resultList;
+    }
     
 }

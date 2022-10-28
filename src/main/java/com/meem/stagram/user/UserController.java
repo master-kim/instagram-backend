@@ -6,14 +6,18 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.meem.stagram.dto.RequstDTO;
+import com.meem.stagram.dto.RequestDTO;
 
 
 
@@ -40,7 +44,7 @@ public class UserController {
      * 2022.10.24.김요한.추가 - @Valid 추가 - 잘못 입력시 Exception 오류 처리
      * */
     @PostMapping("/userLogin")
-    public HashMap<String, Object> userLogin(HttpServletRequest request , @RequestBody @Valid RequstDTO.userLogin userLogin) throws Exception{
+    public HashMap<String, Object> userLogin(HttpServletRequest request , @RequestBody @Valid RequestDTO.userLogin userLogin) throws Exception{
         
         // 세션에 유저 아이디 저장
         HttpSession session = request.getSession();
@@ -77,7 +81,7 @@ public class UserController {
      * 2022.10.24.김요한.추가 - @Valid 추가 - 잘못 입력시 Exception 오류 처리
      * */
     @PostMapping("/userRegister")
-    public HashMap<String, Object> userRegister(HttpServletRequest request , @RequestBody @Valid RequstDTO.userRegister userRegister) throws Exception{
+    public HashMap<String, Object> userRegister(HttpServletRequest request , @RequestBody @Valid RequestDTO.userRegister userRegister) throws Exception{
         
         HttpSession session = request.getSession();
         
@@ -86,5 +90,22 @@ public class UserController {
         return result;
     }
     
+    
+    /**
+     * 2022.10.27.김요한.추가 - 개인페이지 (personal-page)
+     * */
+    @PostMapping("/personalPage")
+    public HashMap<String, Object> personalPage(HttpServletRequest request) throws Exception{
+        
+        // 세션에 유저 아이디 저장
+        HttpSession session = request.getSession();
+        
+        String userId = session.getAttribute("user_id").toString();
+        
+        // 해당 유저 데이터가 맞는지 확인
+        HashMap<String, Object> result = userserviceimpl.findByPersnolPage(userId);
+        
+        return result;
+    }
     
 }

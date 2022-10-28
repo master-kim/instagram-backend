@@ -6,8 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.meem.stagram.dto.RequstDTO;
+import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.follow.FollowServiceImpl;
+import com.meem.stagram.follow.IFollowRepository;
+import com.meem.stagram.post.IPostRepository;
+import com.meem.stagram.post.PostEntity;
+import com.meem.stagram.utils.CommonUtils;
 import com.meem.stagram.utils.DataCipher;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,12 @@ public class UserServiceImpl {
     IUserRepository iuserrepository;
     
     @Autowired
+    IFollowRepository ifollowrepository;
+    
+    @Autowired
+    IPostRepository ipostrepository;
+    
+    @Autowired
     FollowServiceImpl followserviceimpl;
     
     //전체 리스트 조회
@@ -44,7 +54,7 @@ public class UserServiceImpl {
     }
     
     // 2022.10.20.김요한.수정 - 로그인 시 암호화된 데이터 확인 후 성공 여부 뿌려주기
-    public HashMap<String, Object> findByUserId(RequstDTO.userLogin userLogin) {
+    public HashMap<String, Object> findByUserId(RequestDTO.userLogin userLogin) {
         
         HashMap<String, Object> result = new HashMap<>();
         
@@ -79,7 +89,7 @@ public class UserServiceImpl {
         return result;
     }
     
-    public HashMap<String, Object> userSave(RequstDTO.userRegister userRegister) {
+    public HashMap<String, Object> userSave(RequestDTO.userRegister userRegister) {
         
         HashMap<String, Object> result = new HashMap<>();
         
@@ -91,11 +101,10 @@ public class UserServiceImpl {
         if (0 == userList.size()) {
             
             String encUserPwd = DataCipher.encryptDataToString(userId, userPwd);
-            userRegister.setUserPwd(encUserPwd);
             
-            UserEntity userInsert = new UserEntity();
-            userInsert.UserRegister(userRegister);
-            iuserrepository.save(userInsert);
+            // 게시글 테이블 (t_post) 에 데이터 넣기 위한 정보
+            UserEntity fileSaveInfo = UserEntity.UserRegister(userRegister , encUserPwd);
+            iuserrepository.save(fileSaveInfo);
             followserviceimpl.followRegister(userRegister);
             
             result.put("resultCd", "SUCC");
@@ -108,4 +117,46 @@ public class UserServiceImpl {
         
         return result;
     }
+
+    public HashMap<String, Object> findByPersnolPage(String userId) throws Exception {
+        
+        HashMap<String, Object> result = new HashMap<>();
+        
+        // 1단계 : 해당 유저에 대한 정보 가져오기 (클라이언트에 필요 정보 : userNick , userProfile , followerList)
+        List<UserEntity> userList = iuserrepository.findByUserId(userId);
+        
+        // 2단계 : 해당 유저에 대한 followList를 가져오는 스트링 배열 (공통 함수 이용)
+        //      : -1 이유 CommonUtils.followList 에는 나 자신을 포함하므로 나 자신을 빼기위함.
+        List<String> strList = CommonUtils.followList(userId , ifollowrepository);
+        int followCnt = strList.size() - 1;
+        
+        // 3단계 : 해당 유저가 올린 게시글 개수 체크 및 게시물 리스트 가져오기
+        List<PostEntity> postList = ipostrepository.findByUserId(userId);
+        int postCnt = postList.size();
+        
+        result.put("userProfile" , userList.get(0).getUserProfile().toString());
+        result.put("followCnt" , followCnt);
+        result.put("postCnt" , postCnt);
+        result.put("resultCd" , "SUCC");
+        result.put("resultMsg" , "잘 가져왔습니다.");
+        
+        return result;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

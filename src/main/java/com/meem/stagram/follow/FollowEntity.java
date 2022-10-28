@@ -6,9 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.meem.stagram.dto.RequstDTO.userRegister;
-import com.meem.stagram.user.UserEntity;
-import com.meem.stagram.user.UserEntity.VoidBuilder;
+import com.meem.stagram.dto.RequestDTO.userRegister;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
