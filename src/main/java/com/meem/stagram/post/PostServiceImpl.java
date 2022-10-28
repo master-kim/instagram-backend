@@ -87,7 +87,11 @@ public class PostServiceImpl implements IPostService {
         
         String commonId = Integer.toString(postId);
         
-        List<FileEntity> fileInfo = ifilerepository.findByCommonIdIn(commonId);
+        List<String> commonIdList = new ArrayList<String>();
+        
+        commonIdList.add(commonId);
+        
+        List<FileEntity> fileInfo = ifilerepository.findByCommonIdIn(commonIdList);
         
         HashMap<String, Object> resultMap  = new HashMap<String, Object>();
         
