@@ -24,6 +24,8 @@ public interface IPostService {
     
     List<PostEntity> postList(String sessionUserId) throws Exception;
     
+    HashMap<String, Object> postDetail(Integer postId) throws Exception;
+    
     HashMap<String, Object> postCreate(MultipartFile fileInfo, RequestDTO.postCreate postCreateInfo) throws Exception;
 
     HashMap<String, Object> postUpdate(MultipartFile fileInfo, RequestDTO.postUpdate postUpdateInfo) throws Exception;

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.meem.stagram.file.FileEntity;
 import com.meem.stagram.story.StoryEntity;
 import com.meem.stagram.user.UserEntity;
 
@@ -37,5 +38,6 @@ public interface IPostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findByUserId(String userId) throws Exception;
 
     PostEntity findByPostId(Integer postId) throws Exception;
+    
 
 }

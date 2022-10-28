@@ -14,6 +14,7 @@ import javax.websocket.Session;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,13 @@ public class PostController {
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
         
         return ipostservice.postList(sessionUserId);
+    }
+    
+    // 2022.10.28.이강현.추가 - 게시글 상세보기 가져오는 컨트롤러 생성
+    @PostMapping("/postDetail")
+    public HashMap<String, Object> postDetail(@RequestParam Integer postId) throws Exception {
+
+        return ipostservice.postDetail(postId);
     }
     
     // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성

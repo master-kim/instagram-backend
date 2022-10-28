@@ -1,6 +1,7 @@
 package com.meem.stagram.file;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,6 @@ public interface IFileRepository extends JpaRepository<FileEntity, Long>{
     FileEntity save(HashMap<String, Object> resultList) throws Exception;
     
     FileEntity findByCommonIdAndFileFolderType(String commonId , String folderType) throws Exception;
+    
+    List<FileEntity> findByCommonIdIn(String commonId) throws Exception;
 }
