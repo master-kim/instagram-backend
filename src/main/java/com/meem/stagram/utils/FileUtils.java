@@ -38,7 +38,7 @@ public class FileUtils {
      *  전역변수 선언(객체변수)   - 같은 클래스에서 호출 가능  -> 예제 : String test = "";
      *  전역변수 선언(클래스변수)  - 다른 클래스에서 호출 가능  -> 예제 : static String test = "";
      * */
-    private final static String fileFolderPath = "C:\\dev\\workspace\\instagram-frontend\\public\\";
+    private final static String fileFolderPath = "C:\\Users\\isaac\\Documents\\spring-boot\\instagram-frontend\\public\\";
     
     // 2022.10.27.김요한.추가 - 파일 생성
     public static HashMap<String, Object> fileCreate(String i_folder, String i_common_id, MultipartFile i_file_info , IFileRepository ifilerepository) throws Exception{

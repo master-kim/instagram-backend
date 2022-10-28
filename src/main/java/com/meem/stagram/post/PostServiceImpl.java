@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meem.stagram.dto.RequestDTO;
+import com.meem.stagram.file.FileEntity;
 import com.meem.stagram.file.IFileRepository;
 import com.meem.stagram.follow.IFollowRepository;
 import com.meem.stagram.utils.CommonUtils;
@@ -76,6 +77,24 @@ public class PostServiceImpl implements IPostService {
         resultList = ipostrepository.findByUserIdIn(strList);
         
         return resultList;
+    }
+    
+    // 게시글 상세 페이지 조회
+    public HashMap<String, Object> postDetail(Integer postId) throws Exception{
+        
+        //선택한 게시글에 대한 postId로 post 데이터 가져와서 리턴
+        PostEntity postInfo = ipostrepository.findByPostId(postId);
+        
+        String commonId = Integer.toString(postId);
+        
+        List<FileEntity> fileInfo = ifilerepository.findByCommonIdIn(commonId);
+        
+        HashMap<String, Object> resultMap  = new HashMap<String, Object>();
+        
+        resultMap .put("postInfo", postInfo);
+        resultMap .put("fileInfo", fileInfo);
+        
+        return resultMap ;
     }
     
     // 게시글 작성

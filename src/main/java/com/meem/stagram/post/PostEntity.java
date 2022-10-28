@@ -50,8 +50,8 @@ public class PostEntity {
 
     
      @ManyToOne
-     @JoinColumn(name = "userId" , insertable=false, updatable=false) public
-     UserEntity userentity;
+     @JoinColumn(name = "userId" , insertable=false, updatable=false) 
+     public UserEntity userentity;
      
      public static PostEntity postCreate(RequestDTO.postCreate postInfo) {
          
