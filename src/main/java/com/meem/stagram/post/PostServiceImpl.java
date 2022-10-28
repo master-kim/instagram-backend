@@ -88,7 +88,7 @@ public class PostServiceImpl implements IPostService {
         HashMap<String, Object> fileResult = new HashMap<>();
         
         // 파일 생성 시 필요한 String 값
-        String folderType = postCreateInfo.getFileFolder().toString();
+        String folderType = postCreateInfo.getFileFolderType().toString();
         
         // 게시글 테이블 (t_post) 에 데이터 넣기 위한 정보
         PostEntity fileSaveInfo = PostEntity.postCreate(postCreateInfo);
@@ -124,7 +124,7 @@ public class PostServiceImpl implements IPostService {
         HashMap<String, Object> fileResult = new HashMap<>();
         
         // 파일 생성 시 필요한 String 값
-        String folderType = postUpdateInfo.getFileFolder().toString();
+        String folderType = postUpdateInfo.getFileFolderType().toString();
         
         /**
          * int     : 산술 연산이 가능하다. null로 초기화 할 수 없다.

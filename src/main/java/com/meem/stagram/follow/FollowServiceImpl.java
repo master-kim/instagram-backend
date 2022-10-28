@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.post.IPostRepository;
+import com.meem.stagram.story.IStoryService;
 import com.meem.stagram.user.IUserRepository;
 import com.meem.stagram.user.UserEntity;
 import com.meem.stagram.utils.CommonUtils;
@@ -45,20 +46,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service("followserviceimpl")
 @RequiredArgsConstructor
-public class FollowServiceImpl {
-    
-    private final IPostRepository ipostrepository;
+public class FollowServiceImpl implements IFollowService {
     
     private final IFollowRepository ifollowrepository;
     
     private final IUserRepository iuserrepository;
-
-    public List<FollowEntity> findAll() {
-        
-        List<FollowEntity> resultList = ifollowrepository.findAll();
-        
-        return resultList;
-    }
     
     public List<UserEntity> followList(String sessionUserId) throws Exception {
         
@@ -72,15 +64,6 @@ public class FollowServiceImpl {
         resultList = iuserrepository.findByUserIdNotIn(strList);
         
         return resultList;
-    }
-    
-    // 2022.10.25.김요한.추가 - entity가 보호되어있으므로 UserServiceImpl에서 새로 생성 불가로 인해 Impl로 접근 시켜 save
-    public void followRegister(RequestDTO.userRegister userRegister) {
-        
-        FollowEntity userfollow = new FollowEntity();
-        userfollow.FollowRegister(userRegister);
-        ifollowrepository.save(userfollow);
-        
     }
     
 }

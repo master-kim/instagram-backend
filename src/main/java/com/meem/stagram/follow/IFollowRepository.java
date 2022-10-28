@@ -20,6 +20,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IFollowRepository extends JpaRepository<FollowEntity, Long> {
 
-    List<FollowEntity> findByUserId(String userId);
+    List<FollowEntity> findByUserId(String userId) throws Exception;
     
 }

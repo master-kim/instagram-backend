@@ -18,6 +18,7 @@ import lombok.Getter;
  * 2022.10.20    김요한    최초작성 
  * 2022.10.24    김요한    로그인 , 회원가입 DTO 이너클래스 생성 
  * 2022.10.27    이강현    파일 데이터 담는 이너클래스 추가 (3개) - FileCreateRequest , FileUpdateRequest , PostCreateRequest
+ * 2022.10.27    김요한    파일 담는 이너클래스 삭제 -> post , story 생성 시 file 관련 정보 가져오도록 변경
  * -------------------------------------------------------------
  */
 
@@ -111,7 +112,7 @@ public class RequestDTO {
         
         @NotNull
         @NotEmpty(message = "파일 폳더에 해당하는 데이터를 알려주세요.")
-        private String fileFolder;
+        private String fileFolderType;
         
         @NotNull
         @NotEmpty(message = "유저 아이디에 해당하는 데이터를 알려주세요.")
@@ -133,12 +134,13 @@ public class RequestDTO {
         
     }
     
+    // 2022.10.27.김요한.추가 - 게시글 수정 (파일 수정)
     @Getter
     public static class postUpdate {
         
         @NotNull
         @NotEmpty(message = "파일 폳더에 해당하는 데이터를 알려주세요.")
-        private String fileFolder;
+        private String fileFolderType;
         
         @NotNull
         @NotEmpty(message = "게시글에 아이디 값을 보내주세요.")
@@ -170,7 +172,7 @@ public class RequestDTO {
         
         @NotNull
         @NotEmpty(message = "파일 폳더에 해당하는 데이터를 알려주세요.")
-        private String fileFolder;
+        private String fileFolderType;
         
         @NotNull
         @NotEmpty(message = "유저 아이디에 해당하는 데이터를 알려주세요.")
@@ -180,34 +182,5 @@ public class RequestDTO {
         private String storyContent;
         
     }
-    
-    // 2022.10.27.이강현.추가 - FileCreateRequest
-    //@Getter
-    //public static class fileCreate {
-    //    private MultipartFile fileInfo;
-    //    private String        fileType;
-    //    private String        fileFolder;
-    //}
-    
-    //// 2022.10.27.이강현.추가 - FileUpdateRequest
-    //@Getter
-    //@AllArgsConstructor
-    //public static class FileUpdateRequest {
-    //    private Integer fileId;
-    //    private FileType fileType;
-    //    private MultipartFile file;
-    //}
-    //
-    //// 2022.10.27.이강현.추가 - PostCreateRequest
-    //@Getter
-    //@AllArgsConstructor
-    //@NoArgsConstructor
-    //public static class PostCreateRequest {
-    //    private List<Integer> files;
-    //    private String postContent;
-    //    private String postLocation;
-    //    private String postCommentYn;
-    //    private String postLikeYn;
-    //}
     
 }

@@ -45,11 +45,10 @@ public class FileUtils {
         
         /**
          * 변수 정보 
-         * -> i_folder    : story , user , post ...
-         * -> i_file_type : img ...
-         * -> i_common_id   : post_id , user_id , story_id
-         * -> i_file_info : 멀티파트로 가져오는 이미지 파일 .. 등등 
-         * 
+         * -> i_folder        : story , user , post ...
+         * -> i_common_id     : post_id , user_id , story_id
+         * -> i_file_info     : 멀티파트로 가져오는 이미지 파일 .. 등등 
+         * -> ifilerepository : 레포지토리 선언 동작 안함으로 변수로 넘김
          * */
         
         // 결과를 뿌려주는 해시맵
@@ -92,17 +91,9 @@ public class FileUtils {
             resultList.put("file_type", fileType);
             resultList.put("common_id", i_common_id);
             
-            // 9. t_file에 대한 id로 구분값 두기위함
-            //if (i_folder.toUpperCase().equals("STORY")) {
-            //    resultList.put("story_id", Integer.parseInt(i_common_id));
-            //} else if (i_folder.toUpperCase().equals("USER")) {
-            //} else {
-            //    resultList.put("post_id", Integer.parseInt(i_common_id));
-            //}
-            
             FileEntity fileSaveInfo = FileEntity.fileCreate(resultList);
             
-            // 10. DB 파일 테이블에 저장
+            // 9. DB 파일 테이블에 저장
             //ifilerepository2.save(fileSaveInfo).getFileId();
             ifilerepository.save(fileSaveInfo).getFileId();
             
@@ -119,10 +110,10 @@ public class FileUtils {
         
         /**
          * 변수 정보 
-         * -> i_folder    : story , user , post ...
-         * -> i_file_type : img ...
-         * -> i_common_id   : post_id , user_id , story_id
-         * -> i_file_info : 멀티파트로 가져오는 이미지 파일 .. 등등 
+         * -> i_folder        : story , user , post ...
+         * -> i_common_id     : post_id , user_id , story_id
+         * -> i_file_info     : 멀티파트로 가져오는 이미지 파일 .. 등등 
+         * -> ifilerepository : 레포지토리 선언 동작 안함으로 변수로 넘김
          * 
          * */
         
@@ -166,19 +157,11 @@ public class FileUtils {
             resultList.put("file_type", fileType);
             resultList.put("common_id", i_common_id);
             
-            // 9. t_file에 대한 id로 구분값 두기위함
-            //if (i_folder.toUpperCase().equals("STORY")) {
-            //    resultList.put("story_id", Integer.parseInt(i_common_id));
-            //} else if (i_folder.toUpperCase().equals("USER")) {
-            //} else {
-            //    resultList.put("post_id", Integer.parseInt(i_common_id));
-            //}
-            
             FileEntity fileList = ifilerepository.findByCommonIdAndFileFolderType(i_common_id , i_folder);
             
             FileEntity fileSaveInfo = FileEntity.fileUpdate(resultList , fileList);
             
-            // 10. DB 파일 테이블에 저장
+            // 9. DB 파일 테이블에 저장
             //ifilerepository2.save(fileSaveInfo).getFileId();
             ifilerepository.save(fileSaveInfo).getFileId();
             

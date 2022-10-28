@@ -1,16 +1,12 @@
 package com.meem.stagram.post;
-
-
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.websocket.Session;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meem.stagram.dto.RequestDTO;
+import com.meem.stagram.follow.IFollowService;
+import com.meem.stagram.story.IStoryService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,15 +36,34 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor 
 public class PostController {
     
-    private final IPostService ipostservice;
+    private final IPostService   ipostservice;
+    private final IFollowService ifollowservice;
+    private final IStoryService  istoryservice;
     
     // 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
     @PostMapping("/postList")
-    public List<PostEntity> postList(HttpServletRequest request) throws Exception{
+    public HashMap<String, Object> postList(HttpServletRequest request) throws Exception{
+       
+        HashMap<String, Object> resultMap = new HashMap<String, Object>();
         
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
         
-        return ipostservice.postList(sessionUserId);
+        try {
+            
+            resultMap.put("resultCd", "SUCC");
+            resultMap.put("resultMsg", "성공");
+            resultMap.put("postList",  ipostservice.postList(sessionUserId));
+            resultMap.put("followList",  ifollowservice.followList(sessionUserId));
+            resultMap.put("storyList",  istoryservice.storyList(sessionUserId));
+            
+        } catch (Exception e) {
+            
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+            
+        }
+        return resultMap;
     }
     
     // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성

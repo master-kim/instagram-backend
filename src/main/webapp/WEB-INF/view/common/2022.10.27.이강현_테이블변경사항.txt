@@ -1,0 +1,171 @@
+-- 테이블 삭제
+DROP TABLE IF EXISTS t_follow;
+DROP TABLE IF EXISTS t_block;
+DROP TABLE IF EXISTS t_direct_message;
+DROP TABLE IF EXISTS t_story;
+DROP TABLE IF EXISTS t_post_like;
+DROP TABLE IF EXISTS file;
+DROP TABLE IF EXISTS t_user_file;
+DROP TABLE IF EXISTS t_story_file;
+DROP TABLE IF EXISTS t_post_file;
+DROP TABLE IF EXISTS t_comment_like;
+DROP TABLE IF EXISTS t_tag_mapping;
+DROP TABLE IF EXISTS t_comment_tag;
+DROP TABLE IF EXISTS t_comment;
+DROP TABLE IF EXISTS t_post_tag;
+DROP TABLE IF EXISTS t_post;
+DROP TABLE IF EXISTS t_post_file_join;
+DROP TABLE IF EXISTS t_user_info;
+
+-- 테이블 생성
+
+-- 유저 테이블
+CREATE TABLE IF NOT EXISTS t_user_info (
+	  user_id      VARCHAR(128)   NOT NULL PRIMARY KEY
+	, user_nm      VARCHAR(64)    NOT NULL
+	, user_nick    VARCHAR(64)    NOT NULL
+	, user_pwd     VARCHAR(1024)  NOT NULL
+	, user_profile VARCHAR(1024)  
+	, user_phone   VARCHAR(512)
+	, user_email   VARCHAR(512)
+	, user_type    INTEGER        NOT NULL
+	, create_dt    TIMESTAMP    
+	, update_dt    TIMESTAMP
+);
+
+-- 유저간 팔로우 테이블
+CREATE TABLE IF NOT EXISTS t_follow (
+	  user_id        VARCHAR(128)   NOT NULL PRIMARY KEY
+	, follower_list  LONGTEXT
+	, create_dt      TIMESTAMP
+	, update_dt      TIMESTAMP
+	, FOREIGN KEY (user_id) REFERENCES t_user_info(user_id)
+);
+
+-- 유저 차단 테이블
+CREATE TABLE IF NOT EXISTS t_block (
+	  user_id        VARCHAR(128)   NOT NULL PRIMARY KEY
+	, block_id       VARCHAR(128)
+	, create_dt      TIMESTAMP    
+	, FOREIGN KEY (user_id) REFERENCES t_user_info(user_id)
+);
+
+-- 유저간 DM 메세지 테이블
+CREATE TABLE IF NOT EXISTS t_direct_message (
+	  dm_id          INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, send_id        VARCHAR(128)   NOT NULL
+	, receiver_id    VARCHAR(128)   NOT NULL
+	, content        VARCHAR(1024)  NOT NULL
+	, create_dt      TIMESTAMP    
+	, FOREIGN KEY (send_id) REFERENCES t_user_info(user_id)
+);
+
+-- 유저의 스토리 테이블
+CREATE TABLE IF NOT EXISTS t_story (
+	  story_id       INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, user_id        VARCHAR(128)   NOT NULL
+	, user_nick      VARCHAR(64)   NOT NULL
+	, file_id        INTEGER   
+	, content        VARCHAR(1024)  NOT NULL
+	, create_dt      TIMESTAMP    
+	, FOREIGN KEY (user_id) REFERENCES t_user_info(user_id)
+);
+
+-- 파일 테이블
+CREATE TABLE IF NOT EXISTS t_file (
+	  file_id         INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, file_nm         VARCHAR(128)   NOT null
+	, save_file_name  VARCHAR(128)	 NOT NULL
+	, file_type       VARCHAR(16)    NOT null
+	, file_status     VARCHAR(16)    NOT null
+	, create_dt       TIMESTAMP    
+	, update_dt       TIMESTAMP    
+);
+
+-- 게시글 테이블
+CREATE TABLE IF NOT EXISTS t_post (
+	  post_id         INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, user_id         VARCHAR(128)   NOT NULL
+	, post_content    VARCHAR(1024)
+	, post_location   VARCHAR(512)
+	, post_comment_yn CHAR(1)
+	, post_like_yn    CHAR(1)
+	, create_dt      TIMESTAMP    
+	, update_dt      TIMESTAMP
+	, FOREIGN KEY (user_id) REFERENCES t_user_info(user_id)
+);
+
+-- 게시글 테이블, 파일 테이블 매핑테이블
+CREATE TABLE `t_post_file_join` (
+  `post_id` bigint(20) NOT NULL,
+  `file_id` int(11) NOT NULL,
+  KEY `FKfcumcn4u18w214kf918dwr11f` (`file_id`),
+  CONSTRAINT `FKfcumcn4u18w214kf918dwr11f` FOREIGN KEY (`file_id`) REFERENCES `t_file` (`file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- 게시글 좋아요 테이블
+CREATE TABLE IF NOT EXISTS t_post_like (
+	  like_id         INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, post_id         INTEGER        NOT NULL
+	, user_id         VARCHAR(128)
+	, create_dt       TIMESTAMP    
+	, FOREIGN KEY (post_id) REFERENCES t_post(post_id)
+);
+
+-- 댓글 테이블
+CREATE TABLE IF NOT EXISTS t_comment (
+	  comment_id      INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, post_id         INTEGER        NOT NULL
+	, parent_id       INTEGER
+	, user_id         VARCHAR(128)   NOT NULL
+	, content_id      VARCHAR(128)   
+	, create_dt       TIMESTAMP    
+	, update_dt       TIMESTAMP
+	, FOREIGN KEY (post_id) REFERENCES t_post(post_id)
+);
+
+-- 댓글 좋아요 테이블
+CREATE TABLE IF NOT EXISTS t_comment_like (
+	  comment_like_id INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, comment_id      INTEGER        NOT NULL
+	, user_id         VARCHAR(128)   NOT NULL
+	, create_dt       TIMESTAMP    
+	, FOREIGN KEY (comment_id) REFERENCES t_comment(comment_id)
+);
+
+-- 태그 매핑 테이블
+CREATE TABLE IF NOT EXISTS t_tag_mapping (
+	  tag_id          INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+	, post_id         INTEGER        NOT NULL
+	, comment_id      INTEGER        NOT NULL
+	, tag_type        VARCHAR(128)   NOT NULL
+	, create_dt       TIMESTAMP    
+	, update_dt       TIMESTAMP
+	, FOREIGN KEY (post_id) REFERENCES t_post(post_id)
+);
+
+-- 게시글 태그 테이블
+CREATE TABLE IF NOT EXISTS t_post_tag (
+	  tag_id          INTEGER        NOT NULL AUTO_INCREMENT
+	, user_id         VARCHAR(128)
+	, content         VARCHAR(1024)
+	, create_dt       TIMESTAMP    
+	, update_dt       TIMESTAMP
+	, FOREIGN KEY (tag_id) REFERENCES t_tag_mapping(tag_id)
+);
+
+-- 댓글 태그 테이블
+CREATE TABLE IF NOT EXISTS t_comment_tag (
+	  tag_id          INTEGER        NOT NULL AUTO_INCREMENT
+	, comment_id      INTEGER        NOT NULL
+	, content         VARCHAR(1024)
+	, create_dt       TIMESTAMP    
+	, update_dt       TIMESTAMP
+	, FOREIGN KEY (tag_id) REFERENCES t_tag_mapping(tag_id)
+);
+
+
+
+
+
+

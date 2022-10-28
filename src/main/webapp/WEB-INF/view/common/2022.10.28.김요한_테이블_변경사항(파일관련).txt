@@ -1,0 +1,34 @@
+#-------------------------------------------------------------
+# 제목 : 2022.10.28.김요한_테이블_변경사항(파일관련)
+#------------------------------------------------------------- 
+# 작업일          작업자    작업내용
+#------------------------------------------------------------- 
+# 2022.10.28    김요한    최초작성 
+#-------------------------------------------------------------
+
+1. 테이블 변경 사항 (적용방법)
+
+ 변경사항 : t_file 통합
+ 
+-- 스토리 테이블 컬럼명 변경 쿼리
+ALTER TABLE t_story CHANGE content story_content varchar(1024);
+
+-- 테이블 삭제 쿼리
+DROP TABLE IF EXISTS t_file;
+
+DROP TABLE IF EXISTS t_user_file;
+DROP TABLE IF EXISTS t_story_file;
+DROP TABLE IF EXISTS t_post_file;
+
+-- 파일 통합 테이블 생성 쿼리
+CREATE TABLE IF NOT EXISTS t_file (
+      file_id          INTEGER        NOT NULL AUTO_INCREMENT PRIMARY KEY
+    , common_id        VARCHAR(128)   NOT null
+    , file_nm          VARCHAR(128)   NOT null
+    , uuid_file_nm     VARCHAR(128)   NOT NULL
+    , file_type        VARCHAR(16)    NOT null
+    , file_status      VARCHAR(16)    NOT NULL
+    , file_folder_type VARCHAR(32)   NOT NULL
+    , create_dt        TIMESTAMP    
+    , update_dt        TIMESTAMP    
+);

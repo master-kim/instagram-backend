@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.meem.stagram.dto.RequestDTO.userRegister;
+import com.meem.stagram.post.PostEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,12 +38,17 @@ public class FollowEntity {
     public String    createDt;
     public String    updateDt;
     
-    @Builder
-    public void FollowRegister(userRegister userRegister) {
-        this.userId = userRegister.getUserId();
-        this.followerList = "[]";  // default 데이터
-        this.createDt = LocalDate.now().toString();
-        this.updateDt = LocalDate.now().toString();
+    public static FollowEntity followCreate(userRegister userRegister) {
+        
+        FollowEntity FollowEntity = new FollowEntity();
+        
+        FollowEntity.userId          = userRegister.getUserId().toString();
+        FollowEntity.followerList    = "[{}]";
+        FollowEntity.createDt        = LocalDate.now().toString();   
+        FollowEntity.updateDt        = LocalDate.now().toString();   
+        
+        return FollowEntity;
+        
     }
     
 }

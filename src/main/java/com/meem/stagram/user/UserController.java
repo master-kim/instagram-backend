@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meem.stagram.dto.RequestDTO;
+import com.meem.stagram.post.IPostService;
+
+import lombok.RequiredArgsConstructor;
 
 
 
@@ -34,10 +37,10 @@ import com.meem.stagram.dto.RequestDTO;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor 
 public class UserController {
     
-    @Autowired
-    UserServiceImpl userserviceimpl;
+    private final IUserService iuserservice;
     
     /**
      * 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
@@ -51,10 +54,19 @@ public class UserController {
         String userId = userLogin.getUserId().toString();
         session.setAttribute("user_id", userId);
         
-        // 해당 유저 데이터가 맞는지 확인
-        HashMap<String, Object> result = userserviceimpl.findByUserId(userLogin);
+        HashMap<String, Object> resultMap = new HashMap<>();
+        try {
+            // 해당 유저 데이터가 맞는지 확인
+            resultMap = iuserservice.findByUserId(userLogin);
+            resultMap.put("resultCd", "SUCC");
+            resultMap.put("resultMsg", "성공");
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
         
-        return result;
+        return resultMap;
     }
     
     /**
@@ -63,17 +75,16 @@ public class UserController {
     @PostMapping("/userLogout")
     public HashMap<String, Object> userLogout(HttpServletRequest request) throws Exception{
         
+        HashMap<String, Object> resultMap = new HashMap<>();
+        
         // 세션에 유저 아이디 저장
         HttpSession session = request.getSession();
         session.removeAttribute("user_id");
         
-        // 해당 유저 데이터가 맞는지 확인
-        HashMap<String, Object> result = new HashMap<>();
+        resultMap.put("resultCd", "SUCC");
+        resultMap.put("resultMsg", "로그아웃에 성공하였습니다.");
         
-        result.put("resultCd", "SUCC");
-        result.put("resultMsg", "로그아웃에 성공하였습니다.");
-        
-        return result;
+        return resultMap;
     }
     
     /**
@@ -85,11 +96,17 @@ public class UserController {
         
         HttpSession session = request.getSession();
         
-        HashMap<String, Object> result = userserviceimpl.userSave(userRegister);
+        HashMap<String, Object> resultMap = new HashMap<>();
         
-        return result;
+        try {
+            resultMap = iuserservice.userSave(userRegister);
+        } catch (Exception e) {
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
+        
+        return resultMap;
     }
-    
     
     /**
      * 2022.10.27.김요한.추가 - 개인페이지 (personal-page)
@@ -97,15 +114,19 @@ public class UserController {
     @PostMapping("/personalPage")
     public HashMap<String, Object> personalPage(HttpServletRequest request) throws Exception{
         
+        HashMap<String, Object> resultMap = new HashMap<>();
         // 세션에 유저 아이디 저장
         HttpSession session = request.getSession();
-        
         String userId = session.getAttribute("user_id").toString();
         
-        // 해당 유저 데이터가 맞는지 확인
-        HashMap<String, Object> result = userserviceimpl.findByPersnolPage(userId);
+        try {
+            resultMap = iuserservice.findByPersnolPage(userId);
+        } catch (Exception e) {
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
         
-        return result;
+        return resultMap;
     }
     
 }

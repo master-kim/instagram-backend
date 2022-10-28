@@ -3,10 +3,10 @@ package com.meem.stagram.user;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meem.stagram.dto.RequestDTO;
+import com.meem.stagram.follow.FollowEntity;
 import com.meem.stagram.follow.FollowServiceImpl;
 import com.meem.stagram.follow.IFollowRepository;
 import com.meem.stagram.post.IPostRepository;
@@ -30,19 +30,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service("userserviceimpl")
 @RequiredArgsConstructor
-public class UserServiceImpl {
+public class UserServiceImpl implements IUserService {
     
-    @Autowired
-    IUserRepository iuserrepository;
+    private final IUserRepository iuserrepository;
     
-    @Autowired
-    IFollowRepository ifollowrepository;
+    private final IFollowRepository ifollowrepository;
     
-    @Autowired
-    IPostRepository ipostrepository;
-    
-    @Autowired
-    FollowServiceImpl followserviceimpl;
+    private final IPostRepository ipostrepository;
     
     //전체 리스트 조회
     public List<UserEntity> findAll() {
@@ -54,7 +48,7 @@ public class UserServiceImpl {
     }
     
     // 2022.10.20.김요한.수정 - 로그인 시 암호화된 데이터 확인 후 성공 여부 뿌려주기
-    public HashMap<String, Object> findByUserId(RequestDTO.userLogin userLogin) {
+    public HashMap<String, Object> findByUserId(RequestDTO.userLogin userLogin) throws Exception {
         
         HashMap<String, Object> result = new HashMap<>();
         
@@ -89,7 +83,7 @@ public class UserServiceImpl {
         return result;
     }
     
-    public HashMap<String, Object> userSave(RequestDTO.userRegister userRegister) {
+    public HashMap<String, Object> userSave(RequestDTO.userRegister userRegister) throws Exception {
         
         HashMap<String, Object> result = new HashMap<>();
         
@@ -102,10 +96,13 @@ public class UserServiceImpl {
             
             String encUserPwd = DataCipher.encryptDataToString(userId, userPwd);
             
-            // 게시글 테이블 (t_post) 에 데이터 넣기 위한 정보
+            // 유저에 대한 정보 (t_user_info 테이블) 인서트
             UserEntity fileSaveInfo = UserEntity.UserRegister(userRegister , encUserPwd);
             iuserrepository.save(fileSaveInfo);
-            followserviceimpl.followRegister(userRegister);
+            
+            // 유저에 대한 초기 팔로우 리스트 (t_follow 테이블) 인서트 
+            FollowEntity userFollowCreate = FollowEntity.followCreate(userRegister);
+            ifollowrepository.save(userFollowCreate);
             
             result.put("resultCd", "SUCC");
             result.put("resultMsg", "가입에 성공하셨습니다.");

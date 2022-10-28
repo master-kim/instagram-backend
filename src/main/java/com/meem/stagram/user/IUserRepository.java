@@ -31,9 +31,9 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     //List<UserEntity> findAll();
     
     // 추가
-    List<UserEntity> findByUserId(String userId);
+    List<UserEntity> findByUserId(String userId) throws Exception;
     
     // not In
-    List<UserEntity> findByUserIdNotIn(List<String> strList);
+    List<UserEntity> findByUserIdNotIn(List<String> strList) throws Exception;
     
 }
