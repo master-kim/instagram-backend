@@ -89,7 +89,7 @@ public class RequestDTO {
         @NotEmpty(message = "유저 이메일에 부분에는 공백문자 또는 빈 값은 불가능합니다.")
         String userEmail;
         
-        @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "10 ~ 11 자리의 숫자만 입력 가능합니다.")
+        @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "핸드폰 번호는 10 ~ 11 자리의 숫자만 입력 가능합니다.")
         @NotEmpty(message = "유저 핸드폰 부분에는 공백문자 또는 빈 값은 불가능합니다.")
         String userPhone;
         
