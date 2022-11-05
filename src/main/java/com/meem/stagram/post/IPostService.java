@@ -22,7 +22,7 @@ import com.meem.stagram.dto.RequestDTO;
 
 public interface IPostService {
     
-    List<PostEntity> postList(String sessionUserId) throws Exception;
+    HashMap<String, Object> postList(String sessionUserId) throws Exception;
     
     HashMap<String, Object> postDetail(Integer postId) throws Exception;
     

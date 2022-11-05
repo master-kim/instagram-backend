@@ -58,25 +58,23 @@ public class PostServiceImpl implements IPostService {
     private final IFileRepository ifilerepository;
     
     // 전체 리스트 조회
-    public List<PostEntity> postList(String sessionUserId) throws Exception{
-        /* 1. kimyohan
-         * 2. t_follow 테이블에 where = "kimyohan" 데이터가 > (jsonb) [{"user_id" : "원명준"}]
-         * 3. [{"user_id" : "원명준"}]
-         * 4. t_story 테이블에 가서 
-         *    - "원명준" > 데이터가 있으면 가져오기
-         * 5. 추후 스토리를 봤는지 안봤는지 표시를 위해 컬럼 추가 예정 (json) 
-         * */
-        
+    public HashMap<String, Object> postList(String sessionUserId) throws Exception{
         // 결과값을 담는 배열 선언
-        List<PostEntity> resultList = new ArrayList<>();
+        HashMap<String, Object> resultMap = new HashMap<>();
         
-        // 해당 유저에 대한 followList를 가져오는 스트링 배열 (공통 함수 처리)
-        List<String> strList = CommonUtils.followList(sessionUserId , ifollowrepository);
+        // 해당 유저에 대한 followingList를 가져오는 스트링 배열 (공통 함수 처리)
+        List<String> followingList = CommonUtils.followingList(sessionUserId , ifollowrepository);
         
         // 실질적인 결과 값
-        resultList = ipostrepository.findByUserIdIn(strList);
+        List<PostEntity> postList = ipostrepository.findByUserIdIn(followingList);
+        List<String> postIdList = CommonUtils.postIdList(postList);
+        List<FileEntity> fileList = ifilerepository.findByCommonIdInAndFileFolderType(postIdList , "post");
+        // 순서를 같이 가져오므로 아래 공통 영역 불필요
+        //List<HashMap<String, Object>> resultList = CommonUtils.postListAndFileList(postList, fileList);
+        resultMap.put("postList", postList);
+        resultMap.put("fileList", fileList);
         
-        return resultList;
+        return resultMap;
     }
     
     // 게시글 상세 페이지 조회

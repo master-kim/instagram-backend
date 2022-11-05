@@ -26,4 +26,6 @@ public interface IFileRepository extends JpaRepository<FileEntity, Long>{
     FileEntity findByCommonIdAndFileFolderType(String commonId , String folderType) throws Exception;
     
     List<FileEntity> findByCommonIdIn(List<String> commonIdList) throws Exception;
+
+    List<FileEntity> findByCommonIdInAndFileFolderType(List<String> commonIdList, String folderType);
 }

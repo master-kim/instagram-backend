@@ -5,13 +5,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meem.stagram.file.FileEntity;
-import com.meem.stagram.follow.IFollowRepository;
-import com.meem.stagram.post.IPostRepository;
-import com.meem.stagram.post.PostEntity;
 import com.meem.stagram.file.IFileRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +34,7 @@ public class FileUtils {
      *  전역변수 선언(객체변수)   - 같은 클래스에서 호출 가능  -> 예제 : String test = "";
      *  전역변수 선언(클래스변수)  - 다른 클래스에서 호출 가능  -> 예제 : static String test = "";
      * */
-    private final static String fileFolderPath = "C:\\Users\\isaac\\Documents\\spring-boot\\instagram-frontend\\public\\";
+    private final static String fileFolderPath = "C:\\dev\\workspace\\instagram-frontend\\public\\";
     
     // 2022.10.27.김요한.추가 - 파일 생성
     public static HashMap<String, Object> fileCreate(String i_folder, String i_common_id, MultipartFile i_file_info , IFileRepository ifilerepository) throws Exception{
@@ -76,32 +72,24 @@ public class FileUtils {
             
             // 6. 파일 저장 경로 + uuid로 변환된 파일명
             File fileCreate = new File(saveFileLocation + "\\" + uuid + "." + fileType);
-            
+            String folderType = i_folder.toLowerCase();
+            String uuidFileNm = folderType + "\\" + uuid + "." + fileType;
             // 7. 실제 파일을 저장
             i_file_info.transferTo(fileCreate);
             
             // 8. 저장된 파일에 대한 정보 돌려주기
             resultList.put("resultCd", "SUCC");
             resultList.put("resultMsg", "에러 X");
-            resultList.put("uuid_file_nm", fileCreate);
+            resultList.put("uuid_file_nm", uuidFileNm);
             resultList.put("org_file_nm", fileOrgNm);
             resultList.put("file_location", fileCreate);
-            resultList.put("file_folder_type", i_folder);
+            resultList.put("file_folder_type", folderType);
             resultList.put("file_type", fileType);
             resultList.put("common_id", i_common_id);
             
-            // 9. t_file에 대한 id로 구분값 두기위함
-            //if (i_folder.toUpperCase().equals("STORY")) {
-            //    resultList.put("story_id", Integer.parseInt(i_common_id));
-            //} else if (i_folder.toUpperCase().equals("USER")) {
-            //} else {
-            //    resultList.put("post_id", Integer.parseInt(i_common_id));
-            //}
-            
             FileEntity fileSaveInfo = FileEntity.fileCreate(resultList);
             
-            // 10. DB 파일 테이블에 저장
-            //ifilerepository2.save(fileSaveInfo).getFileId();
+            // 9. DB 파일 테이블에 저장
             ifilerepository.save(fileSaveInfo).getFileId();
             
         } catch(IOException ex){
@@ -149,17 +137,18 @@ public class FileUtils {
             
             // 6. 파일 저장 경로 + uuid로 변환된 파일명
             File fileCreate = new File(saveFileLocation + "\\" + uuid + "." + fileType);
-            
+            String folderType = i_folder.toLowerCase();
+            String uuidFileNm = folderType + "\\" + uuid + "." + fileType;
             // 7. 실제 파일을 저장
             i_file_info.transferTo(fileCreate);
             
             // 8. 저장된 파일에 대한 정보 돌려주기
             resultList.put("resultCd", "SUCC");
             resultList.put("resultMsg", "에러 X");
-            resultList.put("uuid_file_nm", fileCreate);
+            resultList.put("uuid_file_nm", uuidFileNm);
             resultList.put("org_file_nm", fileOrgNm);
             resultList.put("file_location", fileCreate);
-            resultList.put("file_folder_type", i_folder);
+            resultList.put("file_folder_type", folderType);
             resultList.put("file_type", fileType);
             resultList.put("common_id", i_common_id);
             

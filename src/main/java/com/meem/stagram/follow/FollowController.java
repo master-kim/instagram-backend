@@ -31,15 +31,15 @@ public class FollowController {
     
     
     // 2022.10.17.김요한.추가 - 스토리 게시판 가져오는 컨트롤러 생성
-    @PostMapping("/followList")
-    public List<UserEntity> followList(HttpServletRequest request) throws Exception{
+    @PostMapping("/followingList")
+    public List<UserEntity> followingList(HttpServletRequest request) throws Exception{
         
         // 추후 session 통해 로그인 id 확인
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
        
-        List<UserEntity> followList = ifollowservice.followList(sessionUserId);
+        List<UserEntity> followingList = ifollowservice.followingList(sessionUserId);
         
-        return followList;
+        return followingList;
     }
     
 }

@@ -15,7 +15,7 @@ import com.meem.stagram.user.UserEntity;
 
 public interface IFollowService {
 
-    List<UserEntity> followList(String sessionUserId) throws Exception;
+    List<UserEntity> followingList(String sessionUserId) throws Exception;
     
 
 }

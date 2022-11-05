@@ -43,15 +43,15 @@ public class StoryServiceImpl implements IStoryService {
     
     /**
      * 2022.10.14.김요한 - 비즈니스 로직 (스토리 리스트 가져오는 로직) - 유저에 대한 팔로우인원에 대한 스토리 올린 리스트 불러오기
-     * 2022.10.25.김요한 - followlist를 공통함수로 가져오게 처리 
+     * 2022.10.25.김요한 - followingList를 공통함수로 가져오게 처리 
      * */
     public List<StoryEntity> storyList(String sessionUserId) throws Exception{
         
         // 결과값을 담는 배열 선언
         List<StoryEntity> resultList = new ArrayList<>();
         
-        // 해당 유저에 대한 followList를 가져오는 스트링 배열 (공통 함수 처리) --> 사용방법 (user_id , ifollowrepository) 를 넘겨주면 가져온다.
-        List<String> strList = CommonUtils.followList(sessionUserId , ifollowrepository);
+        // 해당 유저에 대한 followingList를 가져오는 스트링 배열 (공통 함수 처리) --> 사용방법 (user_id , ifollowrepository) 를 넘겨주면 가져온다.
+        List<String> strList = CommonUtils.followingList(sessionUserId , ifollowrepository);
         
         // 내 스토리 올린거 빼기 (다르게 다룰 예정)
         strList.remove(sessionUserId);

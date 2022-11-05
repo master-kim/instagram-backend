@@ -9,11 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.dto.RequestDTO.postUpdate;
+import com.meem.stagram.file.FileEntity;
+import com.meem.stagram.follow.FollowEntity;
 import com.meem.stagram.user.UserEntity;
 
 import lombok.AccessLevel;
@@ -47,12 +50,11 @@ public class PostEntity {
     public String  postLikeYn;
     public String  createDt;
     public String  updateDt;
-
     
      @ManyToOne
      @JoinColumn(name = "userId" , insertable=false, updatable=false) 
      public UserEntity userentity;
-     
+    
      public static PostEntity postCreate(RequestDTO.postCreate postInfo) {
          
          PostEntity PostEntity = new PostEntity();

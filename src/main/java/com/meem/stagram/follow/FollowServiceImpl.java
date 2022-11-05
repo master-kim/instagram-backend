@@ -52,13 +52,13 @@ public class FollowServiceImpl implements IFollowService {
     
     private final IUserRepository iuserrepository;
     
-    public List<UserEntity> followList(String sessionUserId) throws Exception {
+    public List<UserEntity> followingList(String sessionUserId) throws Exception {
         
         // 결과값을 담는 배열 선언
         List<UserEntity> resultList = new ArrayList<>();
         
-        // 해당 유저에 대한 followList를 가져오는 스트링 배열 (공통 함수 처리)
-        List<String> strList = CommonUtils.followList(sessionUserId , ifollowrepository);
+        // 해당 유저에 대한 followingList를 가져오는 스트링 배열 (공통 함수 처리)
+        List<String> strList = CommonUtils.followingList(sessionUserId , ifollowrepository);
             
         // 실질적인 결과 값
         resultList = iuserrepository.findByUserIdNotIn(strList);

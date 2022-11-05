@@ -1,7 +1,5 @@
 package com.meem.stagram.post;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -53,8 +51,9 @@ public class PostController {
             
             resultMap.put("resultCd", "SUCC");
             resultMap.put("resultMsg", "성공");
-            resultMap.put("postList",  ipostservice.postList(sessionUserId));
-            resultMap.put("followList",  ifollowservice.followList(sessionUserId));
+            resultMap.put("postList",  ipostservice.postList(sessionUserId).get("postList"));
+            resultMap.put("fileList",  ipostservice.postList(sessionUserId).get("fileList"));
+            resultMap.put("followingList",  ifollowservice.followingList(sessionUserId));
             resultMap.put("storyList",  istoryservice.storyList(sessionUserId));
             
         } catch (Exception e) {
