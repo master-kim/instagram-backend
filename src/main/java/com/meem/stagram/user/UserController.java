@@ -97,7 +97,8 @@ public class UserController {
      * 2022.10.24.김요한.추가 - @Valid 추가 - 잘못 입력시 Exception 오류 처리
      * */
     @PostMapping("/userRegister")
-    public List<HashMap<String, Object>> userRegister(HttpServletRequest request , @RequestBody @Valid RequestDTO.userRegister userRegister) throws Exception{
+    public List<HashMap<String, Object>> userRegister(HttpServletRequest request ,
+            @RequestPart("fileInfo") MultipartFile fileInfo) throws Exception{
         
         HttpSession session = request.getSession();
         
@@ -105,12 +106,13 @@ public class UserController {
         
         HashMap<String, Object> resultMap = new HashMap<>();
         
-        try {
-            resultMap = iuserservice.userSave(userRegister);
-        } catch (Exception e) {
-            resultMap.put("resultCd", "FAIL");
-            resultMap.put("resultMsg", e.getMessage().toString());
-        }
+        //try {
+        //    resultMap = iuserservice.userSave(userRegister);
+        //} catch (Exception e) {
+        //    resultMap.put("resultCd", "FAIL");
+        //    resultMap.put("resultMsg", e.getMessage().toString());
+        //}
+        resultMap.put("resultCd", "SUCC");
         
         resultList.add(resultMap);
         
