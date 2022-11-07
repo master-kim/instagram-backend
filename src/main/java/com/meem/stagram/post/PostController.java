@@ -7,6 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -68,8 +69,10 @@ public class PostController {
     
     // 2022.10.28.이강현.추가 - 게시글 상세보기 가져오는 컨트롤러 생성
     @PostMapping("/postDetail")
-    public HashMap<String, Object> postDetail(@RequestParam Integer postId) throws Exception {
-
+    public HashMap<String, Object> postDetail(@RequestBody HashMap<String, Object> param) throws Exception {
+        
+        Integer postId = Integer.parseInt(param.get("postId").toString());
+        
         return ipostservice.postDetail(postId);
     }
     
