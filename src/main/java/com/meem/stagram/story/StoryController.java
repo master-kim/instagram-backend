@@ -1,7 +1,6 @@
 package com.meem.stagram.story;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.meem.stagram.dto.RequestDTO;
-import com.meem.stagram.post.IPostService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +25,7 @@ import lombok.RequiredArgsConstructor;
  * ------------------------------------------------------------- 
  * 2022.10.14    김요한    최초작성 
  * 2022.10.14    김요한    메인 스토리에서 영역 가져오기 
+ * 2022.11.08    김요한    스토리 리스트 가져오기 변경 (파일 가져오기 위해)
  * -------------------------------------------------------------
  */
 
@@ -39,12 +38,26 @@ public class StoryController {
     private final IStoryService istoryservice;
     
     // 2022.10.14.김요한.추가 - 메인 페이지 스토리 리스트 영역
+    // 2022.11.08.김요한.수정 - 파일데이터 추가 위해 변경
     @PostMapping("/storyList")
-    public List<StoryEntity> storyList(HttpServletRequest request) throws Exception{
+    public HashMap<String, Object> storyList(HttpServletRequest request) throws Exception{
+        
+        HashMap<String, Object> resultMap = new HashMap<>();
         
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
         
-        return istoryservice.storyList(sessionUserId);
+        try {
+            resultMap = istoryservice.storyList(sessionUserId);
+            
+        } catch (Exception e) {
+            
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+            
+        }
+        
+        return resultMap ;
     }
     
     // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성
@@ -53,21 +66,21 @@ public class StoryController {
                                                 @RequestPart("fileInfo") @Valid @NotNull @NotEmpty MultipartFile fileInfo ,
                                                 @RequestPart @Valid RequestDTO.storyCreate storyCreateInfo) throws Exception{
         
-        HashMap<String, Object> resultList = new HashMap<>();
+        HashMap<String, Object> resultMap = new HashMap<>();
         
         // 1. 파일이 먼저 없을 경우 리턴
         if(fileInfo.isEmpty()) {
             
-            resultList.put("resultCd" , "FAIL");
-            resultList.put("resultMsg" , "이미지 파일을 첨부하세요.");
+            resultMap.put("resultCd" , "FAIL");
+            resultMap.put("resultMsg" , "이미지 파일을 첨부하세요.");
             
         } else {
             //HttpSession session = request.getSession();
             //String sessionId = session.getAttribute("user_id").toString();
-            resultList = istoryservice.storyCreate(fileInfo , storyCreateInfo);
+            resultMap = istoryservice.storyCreate(fileInfo , storyCreateInfo);
         }
         
-        return resultList;
+        return resultMap;
     }
     
 }

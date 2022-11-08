@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.meem.stagram.user.UserEntity;
+
 /**
  * 설명 : ITestServiceInterface.java 
  * ------------------------------------------------------------- 
@@ -22,6 +24,6 @@ public interface IFollowRepository extends JpaRepository<FollowEntity, Long> {
 
     List<FollowEntity> findByUserId(String userId) throws Exception;
 
-    List<FollowEntity> findByUserIdNot(String i_str_user_id);
-    
+    List<FollowEntity> findByUserIdNot(String i_str_user_id) throws Exception;
+
 }

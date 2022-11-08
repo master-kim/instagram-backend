@@ -1,11 +1,6 @@
 package com.meem.stagram.post;
 
 import java.util.HashMap;
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,12 +17,13 @@ import com.meem.stagram.dto.RequestDTO;
 
 public interface IPostService {
     
+    // 게시글 리스트
     HashMap<String, Object> postList(String sessionUserId) throws Exception;
-    
+    // 게시글 상세보기
     HashMap<String, Object> postDetail(Integer postId) throws Exception;
-    
+    // 게시글 작성
     HashMap<String, Object> postCreate(MultipartFile fileInfo, RequestDTO.postCreate postCreateInfo) throws Exception;
-
+    // 게시글 수정
     HashMap<String, Object> postUpdate(MultipartFile fileInfo, RequestDTO.postUpdate postUpdateInfo) throws Exception;
 
 

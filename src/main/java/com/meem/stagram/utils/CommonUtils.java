@@ -1,18 +1,14 @@
 package com.meem.stagram.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
-import com.meem.stagram.file.FileEntity;
 import com.meem.stagram.follow.FollowEntity;
 import com.meem.stagram.follow.IFollowRepository;
-import com.meem.stagram.post.IPostRepository;
 import com.meem.stagram.post.PostEntity;
 
 /**
@@ -29,7 +25,7 @@ import com.meem.stagram.post.PostEntity;
 
 public class CommonUtils {
     
-    // 2022.10.25.김요한 - 유저에 대한 팔로잉하는 리스트를 뽑는 함수
+    // 2022.10.25.김요한     - 유저에 대한 팔로잉하는 리스트를 뽑는 함수
     public static List<String> followingList(String i_str_user_id, IFollowRepository i_follow_repository) throws Exception{
         
         List<FollowEntity> followingList = i_follow_repository.findByUserId(i_str_user_id);
@@ -49,8 +45,6 @@ public class CommonUtils {
             
             } else {;}
             
-            // 5. 내가 올린 스토리, 게시글도 가져오기 위해 결과값에 추가
-            strList.add(i_str_user_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -105,29 +99,17 @@ public class CommonUtils {
         return strList;
     }
     
-    // 2022.11.03.김요한 - 게시글 , 파일 리스트 뽑아오기
-    public static List<HashMap<String, Object>> postListAndFileList(List<PostEntity> postList, List<FileEntity> fileList) {
+    // 2022.11.03.김요한 - postIdList 뽑는 함수
+    public static List<String> postAndUserIdList(List<PostEntity> postList) {
         
-        List<HashMap<String, Object>> resultList = new ArrayList<>();
+        List<String> strList = new ArrayList<String>();
         
-        for (int postIdx = 0 , postMax = postList.size(); postIdx < postMax; postIdx++ ) {
-             
-             for (int fileIdx = 0 , fileMax = postList.size(); fileIdx < fileMax; fileIdx++ ) {
-                 
-                 String postId = postList.get(postIdx).getPostId().toString();
-                 String commonId = fileList.get(fileIdx).getCommonId().toString();
-                 
-                 if (postId.equals(commonId)) {
-                     HashMap<String, Object> resultMap = new HashMap<>();
-                     resultMap.put("postList", postList.get(postIdx));
-                     resultMap.put("fileList", fileList.get(fileIdx));
-                     resultList.add(resultMap);
-                 } else {;}
-             }
+        for (int postIdx = 0 , listCnt = postList.size(); postIdx < listCnt; postIdx++) {  
+            String userId = postList.get(postIdx).getUserentity().getUserId().toString();
+            strList.add(userId);             
         }
-        return resultList;
         
+        return strList;
     }
     
-
 }

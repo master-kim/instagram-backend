@@ -1,10 +1,10 @@
 package com.meem.stagram.user;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.file.FileEntity;
@@ -15,6 +15,7 @@ import com.meem.stagram.post.IPostRepository;
 import com.meem.stagram.post.PostEntity;
 import com.meem.stagram.utils.CommonUtils;
 import com.meem.stagram.utils.DataCipher;
+import com.meem.stagram.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -75,9 +76,12 @@ public class UserServiceImpl implements IUserService {
                 result.put("resultCd", "SUCC");
                 result.put("resultMsg" , "로그인에 성공하셨습니다.");
                 
+                FileEntity storyFileList = ifilerepository.findByCommonIdAndFileFolderType(userLogin.getUserId().toString() , "user");
+                
                 // 2022.10.27.김요한.수정 - 로그인 시 userId , userNick 넘겨주기 추가 
                 result.put("userId", userList.get(0).userId);
                 result.put("userNick" , userList.get(0).userNick);
+                result.put("userFile" , storyFileList);
             } else {
                 result.put("resultCd", "FAIL");
                 result.put("resultMsg", "비밀번호가 맞지않습니다.");
@@ -87,9 +91,9 @@ public class UserServiceImpl implements IUserService {
         return result;
     }
     
-    public HashMap<String, Object> userSave(RequestDTO.userRegister userRegister) throws Exception {
+    public HashMap<String, Object> userSave(MultipartFile fileInfo , RequestDTO.userRegister userRegister) throws Exception {
         
-        HashMap<String, Object> result = new HashMap<>();
+        HashMap<String, Object> resultMap = new HashMap<>();
         
         String userId = userRegister.getUserId().toString();
         String userPwd = userRegister.getUserPwd().toString();
@@ -102,21 +106,27 @@ public class UserServiceImpl implements IUserService {
             
             // 유저에 대한 정보 (t_user_info 테이블) 인서트
             UserEntity fileSaveInfo = UserEntity.UserRegister(userRegister , encUserPwd);
-            iuserrepository.save(fileSaveInfo);
-            
+            String saveUserId = iuserrepository.save(fileSaveInfo).getUserId();;
             // 유저에 대한 초기 팔로우 리스트 (t_follow 테이블) 인서트 
             FollowEntity userFollowCreate = FollowEntity.followCreate(userRegister);
             ifollowrepository.save(userFollowCreate);
             
-            result.put("resultCd", "SUCC");
-            result.put("resultMsg", "가입에 성공하셨습니다.");
+            HashMap<String, Object> fileResult = FileUtils.fileCreate( "user" , saveUserId , fileInfo , ifilerepository);
+            
+            if (fileResult.get("resultCd").toString().toUpperCase().equals("FAIL")) {
+                resultMap.put("resultCd" , fileResult.get("resultCd"));
+                resultMap.put("resultMsg" , fileResult.get("resultMsg"));
+            } else {
+                resultMap.put("resultCd", "SUCC");
+                resultMap.put("resultMsg", "가입에 성공하셨습니다.");
+            }
             
         } else {
-            result.put("resultCd", "FAIL");
-            result.put("resultMsg", "동일한 아이디가 존재합니다.");
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", "동일한 아이디가 존재합니다.");
         }
         
-        return result;
+        return resultMap;
     }
 
     public HashMap<String, Object> findByPersnolPage(String userId) throws Exception {
@@ -142,8 +152,6 @@ public class UserServiceImpl implements IUserService {
         List<String> postIdList = CommonUtils.postIdList(postList);
         // 5단계 : postId만 뽑은 string 배열
         List<FileEntity> fileList = ifilerepository.findByCommonIdInAndFileFolderType(postIdList , "post");
-        // 순서를 같이 가져오므로 아래 공통 영역 불필요
-        //List<HashMap<String, Object>> resultList = CommonUtils.postListAndFileList(postList, fileList);
         result.put("userProfile" , userList.get(0).getUserProfile().toString());
         result.put("followingCnt" , followingCnt);
         result.put("followerCnt" , followerCnt);

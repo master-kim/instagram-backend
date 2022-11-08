@@ -1,9 +1,6 @@
 package com.meem.stagram.story;
 
 import java.util.HashMap;
-import java.util.List;
-
-import javax.validation.Valid;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,9 +16,9 @@ import com.meem.stagram.dto.RequestDTO;
  */
 
 public interface IStoryService {
-    
-    List<StoryEntity> storyList(String sessionUserId) throws Exception;
-    
+    // 메인페이지 - 스토리 리스트
+    HashMap<String, Object> storyList(String sessionUserId) throws Exception;
+    // 스토리 작성
     HashMap<String, Object> storyCreate(MultipartFile fileInfo, RequestDTO.storyCreate storyCreateInfo) throws Exception;
 
 }

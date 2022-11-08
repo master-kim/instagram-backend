@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
  * ------------------------------------------------------------- 
  * 2022.10.01    김요한    최초작성 
  * 2022.10.01    김요한    최초작성 
+ * 2022.11.08    김요한    메인 페이지 파일 가져오기 추가 및 네이밍 변경 
  * -------------------------------------------------------------
  */
 
@@ -64,15 +65,17 @@ public class PostServiceImpl implements IPostService {
         
         // 해당 유저에 대한 followingList를 가져오는 스트링 배열 (공통 함수 처리)
         List<String> followingList = CommonUtils.followingList(sessionUserId , ifollowrepository);
-        
+        followingList.add(sessionUserId);
         // 실질적인 결과 값
         List<PostEntity> postList = ipostrepository.findByUserIdIn(followingList);
         List<String> postIdList = CommonUtils.postIdList(postList);
-        List<FileEntity> fileList = ifilerepository.findByCommonIdInAndFileFolderType(postIdList , "post");
-        // 순서를 같이 가져오므로 아래 공통 영역 불필요
-        //List<HashMap<String, Object>> resultList = CommonUtils.postListAndFileList(postList, fileList);
+        List<FileEntity> postImgList = ifilerepository.findByCommonIdInAndFileFolderType(postIdList , "post");
+        List<String> userIdList = CommonUtils.postAndUserIdList(postList);
+        List<FileEntity> postUserImgList = ifilerepository.findByCommonIdInAndFileFolderType(userIdList , "user");
+
         resultMap.put("postList", postList);
-        resultMap.put("fileList", fileList);
+        resultMap.put("postImgList", postImgList);
+        resultMap.put("postUserImgList", postUserImgList);
         
         return resultMap;
     }

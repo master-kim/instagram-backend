@@ -1,13 +1,17 @@
 package com.meem.stagram.follow;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+
 import com.meem.stagram.dto.RequestDTO.userRegister;
 import com.meem.stagram.post.PostEntity;
+import com.meem.stagram.user.UserEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,12 +47,24 @@ public class FollowEntity {
         FollowEntity FollowEntity = new FollowEntity();
         
         FollowEntity.userId          = userRegister.getUserId().toString();
-        FollowEntity.followerList    = "[{}]";
+        FollowEntity.followerList    = "[]";
         FollowEntity.createDt        = LocalDate.now().toString();   
         FollowEntity.updateDt        = LocalDate.now().toString();   
         
         return FollowEntity;
         
+    }
+
+    public static FollowEntity followUpdate(List<FollowEntity> followList, JSONArray jsonArr) {
+        
+       FollowEntity FollowEntity = new FollowEntity();
+        
+        FollowEntity.userId          = followList.get(0).getUserId();
+        FollowEntity.followerList    = jsonArr.toString();
+        FollowEntity.createDt        = followList.get(0).getCreateDt();
+        FollowEntity.updateDt        = LocalDate.now().toString();   
+        
+        return FollowEntity;
     }
     
 }
