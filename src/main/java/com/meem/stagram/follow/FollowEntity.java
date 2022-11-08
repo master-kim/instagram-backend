@@ -10,12 +10,9 @@ import javax.persistence.Table;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 
 import com.meem.stagram.dto.RequestDTO.userRegister;
-import com.meem.stagram.post.PostEntity;
-import com.meem.stagram.user.UserEntity;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
