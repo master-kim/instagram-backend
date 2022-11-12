@@ -110,7 +110,6 @@ public class UserController {
             resultMap.put("resultCd", "FAIL");
             resultMap.put("resultMsg", e.getMessage().toString());
         }
-        resultMap.put("resultCd", "SUCC");
         
         resultList.add(resultMap);
         
