@@ -199,4 +199,12 @@ public class RequestDTO {
         private String userId;
     }
     
+    // 2022.11.14.김요한.추가 - 좋아요 누른 PostId 받기
+    @Getter
+    public static class postLike {
+        @NotNull(message = "게시글 아이디값이 존재하지않습니다.")
+        private Integer postId;
+    }
+    
+    
 }

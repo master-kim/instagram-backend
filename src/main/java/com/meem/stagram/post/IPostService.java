@@ -25,6 +25,8 @@ public interface IPostService {
     HashMap<String, Object> postCreate(MultipartFile fileInfo, RequestDTO.postCreate postCreateInfo) throws Exception;
     // 게시글 수정
     HashMap<String, Object> postUpdate(MultipartFile fileInfo, RequestDTO.postUpdate postUpdateInfo) throws Exception;
+    // 게시글 좋아요
+    HashMap<String, Object> postDoLike(String sessionUserId , RequestDTO.postLike postLikeInfo) throws Exception;
 
 
 

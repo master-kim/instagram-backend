@@ -11,6 +11,8 @@ import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.file.FileEntity;
 import com.meem.stagram.file.IFileRepository;
 import com.meem.stagram.follow.IFollowRepository;
+import com.meem.stagram.postLike.IPostLikeRepository;
+import com.meem.stagram.postLike.PostLikeEntity;
 import com.meem.stagram.utils.CommonUtils;
 import com.meem.stagram.utils.FileUtils;
 
@@ -58,6 +60,8 @@ public class PostServiceImpl implements IPostService {
     
     private final IFileRepository ifilerepository;
     
+    private final IPostLikeRepository ipostlikerepository;
+    
     // 전체 리스트 조회
     public HashMap<String, Object> postList(String sessionUserId) throws Exception{
         // 결과값을 담는 배열 선언
@@ -72,8 +76,20 @@ public class PostServiceImpl implements IPostService {
         List<FileEntity> postImgList = ifilerepository.findByCommonIdInAndFileFolderType(postIdList , "post");
         List<String> userIdList = CommonUtils.postAndUserIdList(postList);
         List<FileEntity> postUserImgList = ifilerepository.findByCommonIdInAndFileFolderType(userIdList , "user");
-
+        
+        List<Integer> postLikeCnt = new ArrayList<Integer>();
+        // 좋아요 누가 했는지 알기 위한 리스트
+        List<List<PostLikeEntity>> postLikeList = new ArrayList<List<PostLikeEntity>>();
+        for (int postIdx=0; postIdx < postList.size(); postIdx++) {
+            List<PostLikeEntity> postLike = ipostlikerepository.findBypostId(postList.get(postIdx).getPostId());
+            postLikeList.add(postLike);
+            postLikeCnt.add(postLike.size());
+        } 
+        
+        // 좋아요 개수 알기
         resultMap.put("postList", postList);
+        resultMap.put("postLikeList", postLikeList);
+        resultMap.put("postLikeCnt", postLikeCnt);
         resultMap.put("postImgList", postImgList);
         resultMap.put("postUserImgList", postUserImgList);
         
@@ -180,6 +196,26 @@ public class PostServiceImpl implements IPostService {
         }
         
         return resultList;
+    }
+
+    public HashMap<String, Object> postDoLike(String sessionUserId , RequestDTO.postLike postLikeInfo) throws Exception {
+        // 결과값을 담는 해시맵
+        HashMap<String, Object> resultMap = new HashMap<>();
+        Integer postId = postLikeInfo.getPostId();
+        
+        List<PostLikeEntity> postList = ipostlikerepository.findByPostIdAndUserId(postId , sessionUserId);
+        
+        if (postList.size() == 0) {
+            PostLikeEntity doPostLike = PostLikeEntity.doPostLike(sessionUserId , postId);
+            ipostlikerepository.save(doPostLike);
+        } else {
+            ipostlikerepository.deleteByLikeId(postList.get(0).getLikeId());
+        }
+        
+        resultMap.put("resultCd", "SUCC");
+        resultMap.put("resultMsg", "정상작동");
+        
+        return resultMap;
     }
     
 }

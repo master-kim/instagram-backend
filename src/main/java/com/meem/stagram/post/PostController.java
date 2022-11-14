@@ -48,7 +48,6 @@ public class PostController {
         
         String sessionUserId = request.getSession().getAttribute("user_id").toString();
         
-        
         try {
             // 2022.11.08.김요한.수정 - 각 영역을 1번만 호출하기 위해 변경
             HashMap<String, Object> storyInfo = istoryservice.storyList(sessionUserId);
@@ -62,6 +61,8 @@ public class PostController {
             resultMap.put("storyUserImgList",  storyInfo.get("storyUserImgList"));
             
             resultMap.put("postList",  postInfo.get("postList"));
+            resultMap.put("postLikeList",  postInfo.get("postLikeList"));
+            resultMap.put("postLikeCnt",  postInfo.get("postLikeCnt"));
             resultMap.put("postImgList",  postInfo.get("postImgList"));
             resultMap.put("postUserImgList",  postInfo.get("postUserImgList"));
             
@@ -133,5 +134,23 @@ public class PostController {
         
         return resultList;
     }
+    
+    // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성
+    @PostMapping("/doLike")
+    public HashMap<String, Object> doLike(HttpServletRequest request , @RequestBody @Valid RequestDTO.postLike postLikeInfo) throws Exception{
+        
+        HashMap<String, Object> resultMap = new HashMap<>();
+        
+        String sessionUserId = request.getSession().getAttribute("user_id").toString();
+        try {
+            resultMap = ipostservice.postDoLike(sessionUserId , postLikeInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
+        return resultMap;
+    }
+    
     
 }
