@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
  * 2022.10.17    김요한    게시판 가져오는 컨트롤러 생성
  * 2022.10.27    김요한    게시글 저장 시 파일 생성 + 게시글 데이터 생성
  * 2022.11.08    김요한    게시글 리스트 가져올때 필요 파일 리스트 추가 및 1번호출로 변경
+ * 2022.11.19    김요한    게시글 디테일 페이지 소스 정리 (파일 이미지 , 유저 이미지 댓글 좋아요 수 가져오기 추가)
  * -------------------------------------------------------------
  */
 
@@ -63,6 +64,8 @@ public class PostController {
             resultMap.put("postList",  postInfo.get("postList"));
             resultMap.put("postLikeList",  postInfo.get("postLikeList"));
             resultMap.put("postLikeCnt",  postInfo.get("postLikeCnt"));
+            resultMap.put("postCommentList",  postInfo.get("postCommentList"));
+            resultMap.put("postCommentCnt",  postInfo.get("postCommentCnt"));
             resultMap.put("postImgList",  postInfo.get("postImgList"));
             resultMap.put("postUserImgList",  postInfo.get("postUserImgList"));
             
@@ -82,11 +85,18 @@ public class PostController {
     
     // 2022.10.28.이강현.추가 - 게시글 상세보기 가져오는 컨트롤러 생성
     @PostMapping("/postDetail")
-    public HashMap<String, Object> postDetail(@RequestBody HashMap<String, Object> param) throws Exception {
+    public HashMap<String, Object> postDetail(@RequestBody RequestDTO.postDetail postDetail) throws Exception {
         
-        Integer postId = Integer.parseInt(param.get("postId").toString());
-        
-        return ipostservice.postDetail(postId);
+        HashMap<String, Object> resultMap = new HashMap<String, Object>();
+        Integer postId = postDetail.getPostId();
+        try {
+            resultMap  = ipostservice.postDetail(postId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
+        return resultMap;
     }
     
     // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성
@@ -149,6 +159,24 @@ public class PostController {
             resultMap.put("resultCd", "FAIL");
             resultMap.put("resultMsg", e.getMessage().toString());
         }
+        return resultMap;
+    }
+    
+    // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성
+    @PostMapping("/doComment")
+    public HashMap<String, Object> doComment(HttpServletRequest request , @RequestBody @Valid RequestDTO.postComment postCommentInfo) throws Exception{
+        
+        HashMap<String, Object> resultMap = new HashMap<>();
+        
+        String sessionUserId = request.getSession().getAttribute("user_id").toString();
+        try {
+            resultMap = ipostservice.postDoComment(sessionUserId , postCommentInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
+        
         return resultMap;
     }
     

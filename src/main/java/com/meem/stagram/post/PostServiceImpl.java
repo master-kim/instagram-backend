@@ -11,6 +11,8 @@ import com.meem.stagram.dto.RequestDTO;
 import com.meem.stagram.file.FileEntity;
 import com.meem.stagram.file.IFileRepository;
 import com.meem.stagram.follow.IFollowRepository;
+import com.meem.stagram.postComment.IPostCommentRepository;
+import com.meem.stagram.postComment.PostCommentEntity;
 import com.meem.stagram.postLike.IPostLikeRepository;
 import com.meem.stagram.postLike.PostLikeEntity;
 import com.meem.stagram.utils.CommonUtils;
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
  * 2022.10.01    김요한    최초작성 
  * 2022.10.01    김요한    최초작성 
  * 2022.11.08    김요한    메인 페이지 파일 가져오기 추가 및 네이밍 변경 
+ * 2022.11.19    김요한    게시글 디테일 페이지 소스 정리 (파일 이미지 , 유저 이미지 댓글 좋아요 수 가져오기 추가)
  * -------------------------------------------------------------
  */
 
@@ -62,6 +65,8 @@ public class PostServiceImpl implements IPostService {
     
     private final IPostLikeRepository ipostlikerepository;
     
+    private final IPostCommentRepository ipostcommentrepository;
+    
     // 전체 리스트 조회
     public HashMap<String, Object> postList(String sessionUserId) throws Exception{
         // 결과값을 담는 배열 선언
@@ -77,19 +82,29 @@ public class PostServiceImpl implements IPostService {
         List<String> userIdList = CommonUtils.postAndUserIdList(postList);
         List<FileEntity> postUserImgList = ifilerepository.findByCommonIdInAndFileFolderType(userIdList , "user");
         
-        List<Integer> postLikeCnt = new ArrayList<Integer>();
         // 좋아요 누가 했는지 알기 위한 리스트
+        List<Integer> postLikeCnt = new ArrayList<Integer>();
         List<List<PostLikeEntity>> postLikeList = new ArrayList<List<PostLikeEntity>>();
+        
+        // 댓글 리스트
+        List<List<PostCommentEntity>> postCommentList = new ArrayList<List<PostCommentEntity>>();
+        List<Integer> postCommentCnt = new ArrayList<Integer>();
+        
         for (int postIdx=0; postIdx < postList.size(); postIdx++) {
             List<PostLikeEntity> postLike = ipostlikerepository.findBypostId(postList.get(postIdx).getPostId());
             postLikeList.add(postLike);
             postLikeCnt.add(postLike.size());
+            List<PostCommentEntity> postComment = ipostcommentrepository.findBypostId(postList.get(postIdx).getPostId());
+            postCommentList.add(postComment);
+            postCommentCnt.add(postComment.size());
         } 
         
         // 좋아요 개수 알기
         resultMap.put("postList", postList);
         resultMap.put("postLikeList", postLikeList);
         resultMap.put("postLikeCnt", postLikeCnt);
+        resultMap.put("postCommentList", postCommentList);
+        resultMap.put("postCommentCnt", postCommentCnt);
         resultMap.put("postImgList", postImgList);
         resultMap.put("postUserImgList", postUserImgList);
         
@@ -99,21 +114,27 @@ public class PostServiceImpl implements IPostService {
     // 게시글 상세 페이지 조회
     public HashMap<String, Object> postDetail(Integer postId) throws Exception{
         
+        HashMap<String, Object> resultMap  = new HashMap<String, Object>();
+        String strPostId = Integer.toString(postId);
         //선택한 게시글에 대한 postId로 post 데이터 가져와서 리턴
         PostEntity postInfo = ipostrepository.findByPostId(postId);
+        FileEntity postImg = ifilerepository.findByCommonIdAndFileFolderType(strPostId, "post");
         
-        String commonId = Integer.toString(postId);
+        String postUserId = postInfo.getUserId().toString();
+        FileEntity postUserImg = ifilerepository.findByCommonIdAndFileFolderType(postUserId, "user");
         
-        List<String> commonIdList = new ArrayList<String>();
+        List<PostCommentEntity> postComment = ipostcommentrepository.findBypostId(postId);
+        List<PostLikeEntity> postLike = ipostlikerepository.findBypostId(postId);
         
-        commonIdList.add(commonId);
-        
-        List<FileEntity> fileInfo = ifilerepository.findByCommonIdIn(commonIdList);
-        
-        HashMap<String, Object> resultMap  = new HashMap<String, Object>();
-        
-        resultMap .put("postInfo", postInfo);
-        resultMap .put("fileInfo", fileInfo);
+        resultMap.put("resultCd", "SUCC");
+        resultMap.put("resultMsg", "성공");
+        resultMap.put("postInfo", postInfo);
+        resultMap.put("postImg", postImg);
+        resultMap.put("postUserImg", postUserImg);
+        resultMap.put("postCommentList", postComment);
+        resultMap.put("postCommentCnt", postComment.size());
+        resultMap.put("postLikeList", postLike);
+        resultMap.put("postLikeCnt", postLike.size());
         
         return resultMap ;
     }
@@ -217,5 +238,21 @@ public class PostServiceImpl implements IPostService {
         
         return resultMap;
     }
+    
+    // 게시글 댓글 달기
+    public HashMap<String, Object> postDoComment(String sessionUserId, RequestDTO.postComment postCommentInfo) throws Exception {
+        
+        // 결과값을 담는 해시맵
+        HashMap<String, Object> resultMap = new HashMap<>();
+        
+        PostCommentEntity doPostComment = PostCommentEntity.doPostComment(sessionUserId , postCommentInfo);
+        ipostcommentrepository.save(doPostComment);
+        
+        resultMap.put("resultCd", "SUCC");
+        resultMap.put("resultMsg", "정상작동");
+        
+        return resultMap;
+    }
+
     
 }
