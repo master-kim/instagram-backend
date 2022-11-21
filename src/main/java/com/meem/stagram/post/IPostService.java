@@ -29,6 +29,8 @@ public interface IPostService {
     HashMap<String, Object> postDoLike(String sessionUserId , RequestDTO.postLike postLikeInfo) throws Exception;
     // 게시글 댓글
     HashMap<String, Object> postDoComment(String sessionUserId, RequestDTO.postComment postCommentInfo) throws Exception;
+    // 게시글 댓글 수정 , 댓글 삭제
+    HashMap<String, Object> updateComment(String sessionUserId, RequestDTO.updateComment updateCommentInfo) throws Exception;
 
 
 

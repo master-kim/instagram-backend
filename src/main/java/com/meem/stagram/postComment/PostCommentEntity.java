@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.meem.stagram.dto.RequestDTO;
-import com.meem.stagram.follow.FollowEntity;
+import com.meem.stagram.dto.RequestDTO.updateComment;
 import com.meem.stagram.user.UserEntity;
 
 import lombok.AccessLevel;
@@ -63,5 +63,20 @@ public class PostCommentEntity {
         
         return PostCommentEntity;
         
+    }
+
+    public static PostCommentEntity updateComment(String sessionUserId, updateComment updateCommentInfo) {
+        
+        PostCommentEntity PostCommentEntity = new PostCommentEntity();
+        
+        PostCommentEntity.commentId     = updateCommentInfo.getCommentId();
+        PostCommentEntity.postId        = updateCommentInfo.getPostId();                                        
+        PostCommentEntity.parentId      = 0;                                        
+        PostCommentEntity.userId        = sessionUserId.toString();                                        
+        PostCommentEntity.content       = updateCommentInfo.getCommentContent().toString();                                        
+        PostCommentEntity.createDt      = LocalDate.now().toString();                       
+        PostCommentEntity.updateDt      = LocalDate.now().toString();                       
+        
+        return PostCommentEntity;
     }
 }

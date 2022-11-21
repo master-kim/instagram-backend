@@ -65,6 +65,7 @@ public class PostController {
             resultMap.put("postLikeList",  postInfo.get("postLikeList"));
             resultMap.put("postLikeCnt",  postInfo.get("postLikeCnt"));
             resultMap.put("postCommentList",  postInfo.get("postCommentList"));
+            resultMap.put("commentUserImg",  postInfo.get("commentUserImg"));
             resultMap.put("postCommentCnt",  postInfo.get("postCommentCnt"));
             resultMap.put("postImgList",  postInfo.get("postImgList"));
             resultMap.put("postUserImgList",  postInfo.get("postUserImgList"));
@@ -179,6 +180,25 @@ public class PostController {
         
         return resultMap;
     }
+    
+    // 2022.11.21.김요한.추가 - 댓글 삭제
+    @PostMapping("/updateComment")
+    public HashMap<String, Object> updateComment(HttpServletRequest request , @RequestBody @Valid RequestDTO.updateComment updateCommentInfo) throws Exception{
+        
+        HashMap<String, Object> resultMap = new HashMap<>();
+        
+        String sessionUserId = request.getSession().getAttribute("user_id").toString();
+        try {
+            resultMap = ipostservice.updateComment(sessionUserId , updateCommentInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("resultCd", "FAIL");
+            resultMap.put("resultMsg", e.getMessage().toString());
+        }
+        
+        return resultMap;
+    }
+    
     
     
 }

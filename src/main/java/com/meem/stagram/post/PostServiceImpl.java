@@ -90,6 +90,9 @@ public class PostServiceImpl implements IPostService {
         List<List<PostCommentEntity>> postCommentList = new ArrayList<List<PostCommentEntity>>();
         List<Integer> postCommentCnt = new ArrayList<Integer>();
         
+        // 댓글 유저 이미지리스트
+        List<FileEntity> CommentUserImgList = new ArrayList<FileEntity>();
+        
         for (int postIdx=0; postIdx < postList.size(); postIdx++) {
             List<PostLikeEntity> postLike = ipostlikerepository.findBypostId(postList.get(postIdx).getPostId());
             postLikeList.add(postLike);
@@ -97,6 +100,11 @@ public class PostServiceImpl implements IPostService {
             List<PostCommentEntity> postComment = ipostcommentrepository.findBypostId(postList.get(postIdx).getPostId());
             postCommentList.add(postComment);
             postCommentCnt.add(postComment.size());
+            // 2022.11.21.김요한.수정 - 댓글에 이미지 가져오기
+            for (int commentIdx=0; commentIdx < postComment.size(); commentIdx++) {
+                FileEntity commentUserImg  = ifilerepository.findByCommonIdAndFileFolderType(postComment.get(commentIdx).getUserId().toString(), "user");
+                CommentUserImgList.add(commentUserImg);
+            } 
         } 
         
         // 좋아요 개수 알기
@@ -104,6 +112,7 @@ public class PostServiceImpl implements IPostService {
         resultMap.put("postLikeList", postLikeList);
         resultMap.put("postLikeCnt", postLikeCnt);
         resultMap.put("postCommentList", postCommentList);
+        resultMap.put("commentUserImg", CommentUserImgList);
         resultMap.put("postCommentCnt", postCommentCnt);
         resultMap.put("postImgList", postImgList);
         resultMap.put("postUserImgList", postUserImgList);
@@ -124,7 +133,14 @@ public class PostServiceImpl implements IPostService {
         FileEntity postUserImg = ifilerepository.findByCommonIdAndFileFolderType(postUserId, "user");
         
         List<PostCommentEntity> postComment = ipostcommentrepository.findBypostId(postId);
+        List<FileEntity> CommentUserImgList = new ArrayList<FileEntity>();
         List<PostLikeEntity> postLike = ipostlikerepository.findBypostId(postId);
+        
+        // 2022.11.21.김요한.수정 - 댓글에 이미지 가져오기
+        for (int commentIdx=0; commentIdx < postComment.size(); commentIdx++) {
+            FileEntity commentUserImg  = ifilerepository.findByCommonIdAndFileFolderType(postComment.get(commentIdx).getUserId().toString(), "user");
+            CommentUserImgList.add(commentUserImg);
+        } 
         
         resultMap.put("resultCd", "SUCC");
         resultMap.put("resultMsg", "성공");
@@ -132,6 +148,7 @@ public class PostServiceImpl implements IPostService {
         resultMap.put("postImg", postImg);
         resultMap.put("postUserImg", postUserImg);
         resultMap.put("postCommentList", postComment);
+        resultMap.put("commentUserImg", CommentUserImgList);
         resultMap.put("postCommentCnt", postComment.size());
         resultMap.put("postLikeList", postLike);
         resultMap.put("postLikeCnt", postLike.size());
@@ -247,6 +264,25 @@ public class PostServiceImpl implements IPostService {
         
         PostCommentEntity doPostComment = PostCommentEntity.doPostComment(sessionUserId , postCommentInfo);
         ipostcommentrepository.save(doPostComment);
+        
+        resultMap.put("resultCd", "SUCC");
+        resultMap.put("resultMsg", "정상작동");
+        
+        return resultMap;
+    }
+    
+    // 게시글 댓글 수정 ,삭제 
+    public HashMap<String, Object> updateComment(String sessionUserId, RequestDTO.updateComment updateCommentInfo) throws Exception {
+        // 결과값을 담는 해시맵
+        HashMap<String, Object> resultMap = new HashMap<>();
+        String commentType = updateCommentInfo.getCommentType().toString();
+        
+        if (commentType.equals("D")) {
+            ipostcommentrepository.deleteByCommentId(updateCommentInfo.getCommentId());
+        } else {
+            PostCommentEntity doPostComment = PostCommentEntity.updateComment(sessionUserId , updateCommentInfo);
+            ipostcommentrepository.save(doPostComment);
+        }
         
         resultMap.put("resultCd", "SUCC");
         resultMap.put("resultMsg", "정상작동");
