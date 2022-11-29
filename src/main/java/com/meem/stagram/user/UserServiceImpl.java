@@ -1,5 +1,6 @@
 package com.meem.stagram.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,10 @@ import com.meem.stagram.follow.FollowEntity;
 import com.meem.stagram.follow.IFollowRepository;
 import com.meem.stagram.post.IPostRepository;
 import com.meem.stagram.post.PostEntity;
+import com.meem.stagram.postComment.IPostCommentRepository;
+import com.meem.stagram.postComment.PostCommentEntity;
+import com.meem.stagram.postLike.IPostLikeRepository;
+import com.meem.stagram.postLike.PostLikeEntity;
 import com.meem.stagram.utils.CommonUtils;
 import com.meem.stagram.utils.DataCipher;
 import com.meem.stagram.utils.FileUtils;
@@ -42,6 +47,10 @@ public class UserServiceImpl implements IUserService {
     private final IPostRepository ipostrepository;
     
     private final IFileRepository ifilerepository;
+    
+    private final IPostLikeRepository ipostlikerepository;
+    
+    private final IPostCommentRepository ipostcommentrepository;
     
     //전체 리스트 조회
     public List<UserEntity> findAll() {
@@ -151,10 +160,30 @@ public class UserServiceImpl implements IUserService {
         List<String> postIdList = CommonUtils.postIdList(postList);
         // 5단계 : postId만 뽑은 string 배열
         List<FileEntity> fileList = ifilerepository.findByCommonIdInAndFileFolderType(postIdList , "post");
+        
+        // 좋아요 누가 했는지 알기 위한 리스트
+        List<Integer> postLikeCnt = new ArrayList<Integer>();
+        List<List<PostLikeEntity>> postLikeList = new ArrayList<List<PostLikeEntity>>();
+        
+        // 댓글 리스트
+        List<List<PostCommentEntity>> postCommentList = new ArrayList<List<PostCommentEntity>>();
+        List<Integer> postCommentCnt = new ArrayList<Integer>();
+        
+        for (int postIdx=0; postIdx < postList.size(); postIdx++) {
+            List<PostLikeEntity> postLike = ipostlikerepository.findBypostId(postList.get(postIdx).getPostId());
+            postLikeList.add(postLike);
+            postLikeCnt.add(postLike.size());
+            List<PostCommentEntity> postComment = ipostcommentrepository.findBypostId(postList.get(postIdx).getPostId());
+            postCommentList.add(postComment);
+            postCommentCnt.add(postComment.size());
+        } 
+        
         result.put("userProfile" , userList.get(0).getUserProfile().toString());
         result.put("followingCnt" , followingCnt);
         result.put("followerCnt" , followerCnt);
         result.put("postList" , postList);
+        result.put("postLikeCnt" , postLikeCnt);
+        result.put("postCommentCnt" , postCommentCnt);
         result.put("fileList" , fileList);
         result.put("postCnt" , postCnt);
         result.put("resultCd" , "SUCC");
