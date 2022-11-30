@@ -103,8 +103,8 @@ public class PostController {
     // 2022.10.27.김요한.추가 - 게시글 저장 시 파일 생성 + 게시글 데이터 생성
     @PostMapping("/postCreate")
     public HashMap<String, Object> postCreate(HttpServletRequest request , 
-                                                @RequestPart("fileInfo") @Valid @NotNull @NotEmpty MultipartFile fileInfo ,
-                                                @RequestPart @Valid RequestDTO.postCreate postCreateInfo) throws Exception{
+            @RequestPart("fileInfo") @Valid @NotNull(message = "파일을 넣어주세요.") MultipartFile fileInfo ,
+            @RequestPart("postInfo") @Valid RequestDTO.postCreate postCreateInfo) throws Exception{
         
         HashMap<String, Object> resultList = new HashMap<>();
         
